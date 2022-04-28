@@ -1,18 +1,16 @@
-import util.Intersection;
-import util.Listener;
-
 import javax.swing.*;
-import java.awt.Graphics;
-import java.awt.Color;
+import java.awt.*;
 import java.util.ArrayList;
 
+import util.Edge;
 import util.Point;
+import util.Result;
 
 public class Runner extends JPanel {
     private JFrame frame;
     private Listener listener;
     private ArrayList<Point> list = new ArrayList<>();
-    private Intersection[][] intersections;
+    private Point[][] intersections;
     static final int WINDOW_WIDTH = 1100;
     static final int WINDOW_HEIGHT = 800;
     static final int MARGIN_SIZE = 100;
@@ -22,6 +20,8 @@ public class Runner extends JPanel {
     static int CELL_HEIGHT = (WINDOW_HEIGHT - 2 * MARGIN_SIZE) / NUM_VERTICAL_INTERSECTIONS;
     static final int SMALL_CIRCLE_HIT_BOX_SIZE = 40;
     static final int SMALL_CIRCLE_RADIUS = 5;
+    private Point first = Point.NULL_LOCATION;
+    private ArrayList<Edge> edges = new ArrayList<>();
 
     public Runner(){
         listener = Listener.getInstance();
@@ -36,22 +36,27 @@ public class Runner extends JPanel {
         frame.addKeyListener(listener);
         frame.addMouseMotionListener(listener);
 
-        intersections = new Intersection[NUM_HORIZONTAL_INTERSECTIONS + 1][NUM_VERTICAL_INTERSECTIONS + 1];
+        intersections = new Point[NUM_HORIZONTAL_INTERSECTIONS + 1][NUM_VERTICAL_INTERSECTIONS + 1];
         for(int x = 0; x <= NUM_HORIZONTAL_INTERSECTIONS; x++){
             for(int y = 0; y <= NUM_VERTICAL_INTERSECTIONS; y++){
-                intersections[x][y] = new Intersection(new Point(MARGIN_SIZE + x * CELL_WIDTH, MARGIN_SIZE + y * CELL_HEIGHT));
+                intersections[x][y] = new Point(MARGIN_SIZE + x * CELL_WIDTH, MARGIN_SIZE + y * CELL_HEIGHT);
             }
         }
 
     }
-    public void paintComponent(Graphics g){
-        super.paintComponent(g);
+    public void paintComponent(Graphics graphics){
+        super.paintComponent(graphics);
+        Graphics2D g = (Graphics2D)graphics;
         //handling actions
-        if(!listener.getLocation().equals(Point.NULL_LOCATION)){
+        if(!listener.getLastClicked().equals(Point.NULL_LOCATION)){
             //if the previously released coordinates is not the null location
-            updateIntersections(listener.getLocation());
-            listener.setNullLocation();
-
+            if(listener.getButton() == Listener.LEFT_MOUSE_BUTTON) {
+                updateIntersections(listener.getLastClicked());
+            }
+            else if(listener.getButton() == Listener.RIGHT_MOUSE_BUTTON){
+                first = Point.NULL_LOCATION;
+            }
+            listener.clearLastClicked();
         }
 
 
@@ -60,27 +65,30 @@ public class Runner extends JPanel {
 
         //actual graphics
         g.setColor(Color.BLACK);
-        g.drawRect(MARGIN_SIZE, MARGIN_SIZE, WINDOW_WIDTH - 2 * MARGIN_SIZE, WINDOW_HEIGHT - 2 * MARGIN_SIZE);
-        for(Intersection[] row : intersections){
-            for(Intersection intersection : row) {
-                int x = intersection.getLocation().x;
-                int y = intersection.getLocation().y;
-                if (intersection.isPressed()) {
-                    g.fillOval(x - SMALL_CIRCLE_RADIUS, y - SMALL_CIRCLE_RADIUS, SMALL_CIRCLE_RADIUS * 2, SMALL_CIRCLE_RADIUS * 2);
-                }
-                else{
-                    g.drawOval(x - SMALL_CIRCLE_RADIUS, y - SMALL_CIRCLE_RADIUS, SMALL_CIRCLE_RADIUS * 2, SMALL_CIRCLE_RADIUS * 2);
-                }
-                g.drawOval(x - SMALL_CIRCLE_HIT_BOX_SIZE/2, y - SMALL_CIRCLE_HIT_BOX_SIZE/2, SMALL_CIRCLE_HIT_BOX_SIZE, SMALL_CIRCLE_HIT_BOX_SIZE);
+        //g.drawRect(MARGIN_SIZE, MARGIN_SIZE, WINDOW_WIDTH - 2 * MARGIN_SIZE, WINDOW_HEIGHT - 2 * MARGIN_SIZE);
+        for(Point[] row : intersections){
+            for(Point intersection : row) {
+                int x = intersection.x;
+                int y = intersection.y;
+                g.drawOval(x - SMALL_CIRCLE_RADIUS, y - SMALL_CIRCLE_RADIUS, SMALL_CIRCLE_RADIUS * 2, SMALL_CIRCLE_RADIUS * 2);
+                //g.drawOval(x - SMALL_CIRCLE_HIT_BOX_SIZE/2, y - SMALL_CIRCLE_HIT_BOX_SIZE/2, SMALL_CIRCLE_HIT_BOX_SIZE, SMALL_CIRCLE_HIT_BOX_SIZE);
             }
+        }
+        g.setStroke(new BasicStroke(SMALL_CIRCLE_RADIUS * 2 + 1));
+        if(first != Point.NULL_LOCATION){
+            Point current = listener.getCurrentLocation().add(0, -30);
+            g.fillOval(first.x - SMALL_CIRCLE_RADIUS, first.y - SMALL_CIRCLE_RADIUS, SMALL_CIRCLE_RADIUS * 2, SMALL_CIRCLE_RADIUS * 2);
+            g.drawLine(first.x, first.y, current.x, current.y);
+        }
+        for(Edge edge : edges){
+            g.drawLine(edge.p1.x, edge.p1.y, edge.p2.x, edge.p2.y);
         }
 
 
 
         repaint();
     }
-    public void updateIntersections(Point location){
-        location.y -= 30;
+    public Result<Point> getClosestIntersection(Point location){
         int x = location.x;
         int y = location.y;
 
@@ -91,33 +99,41 @@ public class Runner extends JPanel {
         x = (int) Math.round(precise_x);
         y = (int) Math.round(precise_y);
         if(x < 0 || x > intersections.length - 1 || y < 0 || y > intersections[0].length - 1){
+            return new Result<>();
+        }
+        return new Result<>(intersections[x][y]);
+    }
+
+
+    public void updateIntersections(Point location){
+        Point adjusted = location.add(0, -30);
+        Result<Point> result = getClosestIntersection(adjusted);
+        if(result.error()){
+            first = Point.NULL_LOCATION;
             return;
         }
-        Intersection closest = intersections[x][y];
-        System.out.println("Closest: " + closest.getLocation());
-        System.out.println("Location: " + location);
-        System.out.println(location.distanceFrom(closest.getLocation()));
-        if(location.distanceFrom(closest.getLocation()) < SMALL_CIRCLE_HIT_BOX_SIZE/2.0){
+        Point closest = result.get();
+        if(adjusted.distanceFrom(closest) < SMALL_CIRCLE_HIT_BOX_SIZE/2.0){
             //if the intersection clicked is the first one, then mark it
             //if the intersection clicked is the second one, clear both
-
-            if(listener.getFirstSelection() == null){
-                //is first selection
-                listener.addSelection(closest);
-                closest.setPressed(true);
+            if(first == Point.NULL_LOCATION){
+                //is first intersection
+                first = closest;
             }
             else{
-                //is second selection
-                listener.getFirstSelection().setPressed(false);
-                listener.clearSelections();
+                //is second intersection
+                //do something
+                if(first.x == closest.x || first.y == closest.y){
+                    edges.add(new Edge(first, closest));
+                }
+                first = Point.NULL_LOCATION;
             }
+
 
         }
         else{
             //if user clicked somewhere invalid, clear the first selection
-            if(listener.getFirstSelection() != null){
-                listener.getFirstSelection().setPressed(false);
-            }
+
         }
     }
 

@@ -3,8 +3,11 @@ package util;
 import java.awt.event.MouseEvent;
 
 public class Point {
-    public int x, y;
-    public static final Point NULL_LOCATION = new Point(-14342, -14342);
+    public final int x, y;
+    public static final Point NULL_LOCATION = new Point(-914323342, -1434346692);
+    public static Point extract_point(MouseEvent e){
+        return new Point(e.getX(), e.getY());
+    }
     public Point(int x, int y){
         this.x = x;
         this.y = y;
@@ -16,10 +19,9 @@ public class Point {
 
         return Math.sqrt(delta_x * delta_x + delta_y * delta_y);
     }
-    public static Point extract_point(MouseEvent e){
-        return new Point(e.getX(), e.getY());
+    public Point add(int x, int y){
+        return new Point(this.x + x, this.y + y);
     }
-
     @Override
     public boolean equals(Object obj) {
         if(obj instanceof Point){
@@ -31,4 +33,7 @@ public class Point {
         }
         return false;
     }
+
+
+
 }

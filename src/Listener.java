@@ -1,4 +1,4 @@
-package util;
+import util.Point;
 
 import javax.swing.*;
 import java.awt.event.*;
@@ -8,10 +8,12 @@ public class Listener implements MouseListener, KeyListener, MouseMotionListener
     static Listener instance;
     static boolean created = false;
     private boolean pressed = false;
-    private Point location = Point.NULL_LOCATION;
+    private Point lastClicked = Point.NULL_LOCATION;
+    private Point currentLocation = Point.NULL_LOCATION;
+    private int button = -1;
+    public static final int LEFT_MOUSE_BUTTON = 1;
+    public static final int RIGHT_MOUSE_BUTTON = 2;
     private ArrayList<Point> list;
-    private Intersection first;
-    private Intersection second;
 
     private Listener(){}
     public static Listener getInstance(){
@@ -28,26 +30,16 @@ public class Listener implements MouseListener, KeyListener, MouseMotionListener
     public boolean isPressed(){
         return pressed;
     }
-    public Point getLocation(){
-        return location;
+    public Point getLastClicked(){
+        return lastClicked;
     }
-    public void setNullLocation(){
-        location = Point.NULL_LOCATION;
+    public Point getCurrentLocation() { return currentLocation; }
+    public int getButton() { return button; }
+    public void clearLastClicked(){
+        lastClicked = Point.NULL_LOCATION;
+        button = 0;
     }
-    public void clearSelections(){
-        first = null;
-        second = null;
-    }
-    public void addSelection(Intersection intersection){
-        if(first == null){
-            first = intersection;
-        }
-        else{
-            second = intersection;
-        }
-    }
-    public Intersection getFirstSelection(){ return first;}
-    public Intersection getSecondSelection(){ return second; }
+
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -70,18 +62,17 @@ public class Listener implements MouseListener, KeyListener, MouseMotionListener
 
     @Override
     public void mousePressed(MouseEvent e) {
-        System.out.println("Mouse Pressed!");
         pressed = true;
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        lastClicked = Point.extract_point(e);
         if(SwingUtilities.isRightMouseButton(e)){
-            first.setPressed(false);
-            clearSelections();
+            button = RIGHT_MOUSE_BUTTON;
         }
         else if(SwingUtilities.isLeftMouseButton(e)){
-            location = Point.extract_point(e);
+            button = LEFT_MOUSE_BUTTON;
         }
         pressed = false;
 
@@ -101,16 +92,16 @@ public class Listener implements MouseListener, KeyListener, MouseMotionListener
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        int x = e.getX();
-        int y = e.getY() - 20;
-        System.out.println(pressed);
-        if(pressed) {
-            System.out.println("Dragged");
-            list.add(new Point(x, y));
-        }
+        currentLocation = Point.extract_point(e);
+//        int x = e.getX();
+//        int y = e.getY() - 30;
+//        if(pressed) {
+//            list.add(new Point(x, y));
+//        }
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
+        currentLocation = Point.extract_point(e);
     }
 }
