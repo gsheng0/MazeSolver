@@ -22,6 +22,8 @@ public class Runner extends JPanel {
     static final int SMALL_CIRCLE_RADIUS = 5;
     private Point first = Point.NULL_LOCATION;
     private ArrayList<Edge> edges = new ArrayList<>();
+    private ArrayList<Ball> balls = new ArrayList<>();
+    Ball ball = new Ball(new Point(100, 100), new Point(0.04, 0.04));
 
     public Runner(){
         listener = Listener.getInstance();
@@ -48,12 +50,15 @@ public class Runner extends JPanel {
         super.paintComponent(graphics);
         Graphics2D g = (Graphics2D)graphics;
         //handling actions
+        ball.move();
         if(!listener.getLastClicked().equals(Point.NULL_LOCATION)){
             //if the previously released coordinates is not the null location
             if(listener.getButton() == Listener.LEFT_MOUSE_BUTTON) {
+                ball.hitHorizontalWall();
                 updateIntersections(listener.getLastClicked());
             }
             else if(listener.getButton() == Listener.RIGHT_MOUSE_BUTTON){
+                ball.hitVerticalWall();
                 first = Point.NULL_LOCATION;
             }
             listener.clearLastClicked();
@@ -65,6 +70,7 @@ public class Runner extends JPanel {
 
         //actual graphics
         g.setColor(Color.BLACK);
+        g.fillOval(ball.getLocation().x - Ball.RADIUS, ball.getLocation().y - Ball.RADIUS, Ball.RADIUS * 2, Ball.RADIUS * 2);
         //g.drawRect(MARGIN_SIZE, MARGIN_SIZE, WINDOW_WIDTH - 2 * MARGIN_SIZE, WINDOW_HEIGHT - 2 * MARGIN_SIZE);
         for(Point[] row : intersections){
             for(Point intersection : row) {
@@ -122,8 +128,8 @@ public class Runner extends JPanel {
             }
             else{
                 //is second intersection
-                //do something
-                if(first.x == closest.x || first.y == closest.y){
+                //checks to make sure the other point would form a straight edge with first point
+                if((first.x == closest.x || first.y == closest.y) && !(first.x == closest.x && first.y == closest.y)){
                     edges.add(new Edge(first, closest));
                 }
                 first = Point.NULL_LOCATION;
