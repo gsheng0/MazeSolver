@@ -1,3 +1,4 @@
+import javafx.scene.input.KeyCode;
 import util.Point;
 
 import javax.swing.*;
@@ -13,6 +14,8 @@ public class Listener implements MouseListener, KeyListener, MouseMotionListener
     private int button = -1;
     public static final int LEFT_MOUSE_BUTTON = 1;
     public static final int RIGHT_MOUSE_BUTTON = 2;
+    public boolean leftArrow, rightArrow, downArrow, upArrow;
+    public Ball ball;
     private ArrayList<Point> list;
 
     private Listener(){}
@@ -48,12 +51,36 @@ public class Listener implements MouseListener, KeyListener, MouseMotionListener
 
     @Override
     public void keyPressed(KeyEvent e) {
-
+        int code = e.getKeyCode();
+        if(code == KeyEvent.VK_LEFT){
+            leftArrow = true;
+        }
+        else if(code == KeyEvent.VK_RIGHT){
+            rightArrow = true;
+        }
+        else if(code == KeyEvent.VK_DOWN){
+            downArrow = true;
+        }
+        else if(code == KeyEvent.VK_UP){
+            upArrow = true;
+        }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-
+        int code = e.getKeyCode();
+        if(code == KeyEvent.VK_LEFT){
+            leftArrow = false;
+        }
+        else if(code == KeyEvent.VK_RIGHT){
+            rightArrow = false;
+        }
+        else if(code == KeyEvent.VK_DOWN){
+            downArrow = false;
+        }
+        else if(code == KeyEvent.VK_UP){
+            upArrow = false;
+        }
     }
 
     @Override

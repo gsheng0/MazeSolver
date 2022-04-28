@@ -12,6 +12,9 @@ public class Ball {
     public void move(){
         location = Point.add(location, velocity);
     }
+    public void move(double x, double y){
+        this.location = this.location.add(x, y);
+    }
     public void hitHorizontalWall(){
         velocity = new Point(velocity.double_x * -1, velocity.double_y);
     }

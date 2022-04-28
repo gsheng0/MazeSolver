@@ -23,7 +23,8 @@ public class Runner extends JPanel {
     private Point first = Point.NULL_LOCATION;
     private ArrayList<Edge> edges = new ArrayList<>();
     private ArrayList<Ball> balls = new ArrayList<>();
-    Ball ball = new Ball(new Point(100, 100), new Point(0.04, 0.04));
+    Ball ball = new Ball(new Point(WINDOW_WIDTH/2, WINDOW_HEIGHT/2), new Point(0, 0));
+    //0.04, 0.04
 
     public Runner(){
         listener = Listener.getInstance();
@@ -45,6 +46,8 @@ public class Runner extends JPanel {
             }
         }
 
+        this.listener.ball = ball;
+
     }
     public void paintComponent(Graphics graphics){
         super.paintComponent(graphics);
@@ -62,6 +65,18 @@ public class Runner extends JPanel {
                 first = Point.NULL_LOCATION;
             }
             listener.clearLastClicked();
+        }
+        if(listener.upArrow){
+            ball.move(0, -0.04);
+        }
+        if(listener.downArrow){
+            ball.move(0, 0.04);
+        }
+        if(listener.leftArrow){
+            ball.move(-0.04, 0);
+        }
+        if(listener.rightArrow){
+            ball.move(0.04, 0);
         }
 
 

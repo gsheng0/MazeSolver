@@ -32,7 +32,7 @@ public class Point {
     public Point add(int x, int y){
         return new Point(this.x + x, this.y + y);
     }
-    public Point add(double x, double y){ return new Point(this.x + x, this.y + y); }
+    public Point add(double x, double y){ return new Point(this.double_x + x, this.double_y + y); }
     @Override
     public boolean equals(Object obj) {
         if(obj instanceof Point){
