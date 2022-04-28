@@ -1,5 +1,6 @@
 package util;
 
+import javax.swing.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 
@@ -7,8 +8,10 @@ public class Listener implements MouseListener, KeyListener, MouseMotionListener
     static Listener instance;
     static boolean created = false;
     private boolean pressed = false;
-    private Point location = new Point(0, 0);
+    private Point location = Point.NULL_LOCATION;
     private ArrayList<Point> list;
+    private Intersection first;
+    private Intersection second;
 
     private Listener(){}
     public static Listener getInstance(){
@@ -28,6 +31,23 @@ public class Listener implements MouseListener, KeyListener, MouseMotionListener
     public Point getLocation(){
         return location;
     }
+    public void setNullLocation(){
+        location = Point.NULL_LOCATION;
+    }
+    public void clearSelections(){
+        first = null;
+        second = null;
+    }
+    public void addSelection(Intersection intersection){
+        if(first == null){
+            first = intersection;
+        }
+        else{
+            second = intersection;
+        }
+    }
+    public Intersection getFirstSelection(){ return first;}
+    public Intersection getSecondSelection(){ return second; }
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -56,8 +76,17 @@ public class Listener implements MouseListener, KeyListener, MouseMotionListener
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        if(SwingUtilities.isRightMouseButton(e)){
+            first.setPressed(false);
+            clearSelections();
+        }
+        else if(SwingUtilities.isLeftMouseButton(e)){
+            location = Point.extract_point(e);
+        }
         pressed = false;
-        list.add(new Point(-1, -1));
+
+//        list.add(new Point(-1, -1));
+
     }
 
     @Override
