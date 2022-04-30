@@ -20,6 +20,7 @@ public class Runner extends JPanel {
     static int CELL_HEIGHT = (WINDOW_HEIGHT - 2 * MARGIN_SIZE) / NUM_VERTICAL_INTERSECTIONS;
     static final int SMALL_CIRCLE_HIT_BOX_SIZE = 40;
     static final int SMALL_CIRCLE_RADIUS = 5;
+    static int WALL_WIDTH = 2 * SMALL_CIRCLE_RADIUS + 2;
     private Point first = Point.NULL_LOCATION;
     private ArrayList<Edge> edges = new ArrayList<>();
     private ArrayList<Ball> balls = new ArrayList<>();
@@ -45,9 +46,6 @@ public class Runner extends JPanel {
                 intersections[x][y] = new Point(MARGIN_SIZE + x * CELL_WIDTH, MARGIN_SIZE + y * CELL_HEIGHT);
             }
         }
-
-        this.listener.ball = ball;
-
     }
     public void paintComponent(Graphics graphics){
         super.paintComponent(graphics);
@@ -79,10 +77,6 @@ public class Runner extends JPanel {
             ball.move(0.04, 0);
         }
 
-
-
-
-
         //actual graphics
         g.setColor(Color.BLACK);
         g.fillOval(ball.getLocation().x - Ball.RADIUS, ball.getLocation().y - Ball.RADIUS, Ball.RADIUS * 2, Ball.RADIUS * 2);
@@ -95,7 +89,7 @@ public class Runner extends JPanel {
                 //g.drawOval(x - SMALL_CIRCLE_HIT_BOX_SIZE/2, y - SMALL_CIRCLE_HIT_BOX_SIZE/2, SMALL_CIRCLE_HIT_BOX_SIZE, SMALL_CIRCLE_HIT_BOX_SIZE);
             }
         }
-        g.setStroke(new BasicStroke(SMALL_CIRCLE_RADIUS * 2 + 1));
+        g.setStroke(new BasicStroke(WALL_WIDTH));
         if(first != Point.NULL_LOCATION){
             Point current = listener.getCurrentLocation().add(0, -30);
             g.fillOval(first.x - SMALL_CIRCLE_RADIUS, first.y - SMALL_CIRCLE_RADIUS, SMALL_CIRCLE_RADIUS * 2, SMALL_CIRCLE_RADIUS * 2);
@@ -104,9 +98,6 @@ public class Runner extends JPanel {
         for(Edge edge : edges){
             g.drawLine(edge.p1.x, edge.p1.y, edge.p2.x, edge.p2.y);
         }
-
-
-
         repaint();
     }
     public Result<Point> getClosestIntersection(Point location){
@@ -124,8 +115,6 @@ public class Runner extends JPanel {
         }
         return new Result<>(intersections[x][y]);
     }
-
-
     public void updateIntersections(Point location){
         Point adjusted = location.add(0, -30);
         Result<Point> result = getClosestIntersection(adjusted);
@@ -149,12 +138,10 @@ public class Runner extends JPanel {
                 }
                 first = Point.NULL_LOCATION;
             }
-
-
         }
         else{
-            //if user clicked somewhere invalid, clear the first selection
-
+            //clear selection if the user clicks somewhere invalid
+            first = Point.NULL_LOCATION;
         }
     }
 
@@ -162,6 +149,7 @@ public class Runner extends JPanel {
         Runner runner = new Runner();
     }
 }
+
 
 //drawing lines
 //        for(int i = 0; i < list.size() - 1; i++){

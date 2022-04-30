@@ -15,7 +15,6 @@ public class Listener implements MouseListener, KeyListener, MouseMotionListener
     public static final int LEFT_MOUSE_BUTTON = 1;
     public static final int RIGHT_MOUSE_BUTTON = 2;
     public boolean leftArrow, rightArrow, downArrow, upArrow;
-    public Ball ball;
     private ArrayList<Point> list;
 
     private Listener(){}

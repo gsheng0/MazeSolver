@@ -1,9 +1,14 @@
+import util.Edge;
 import util.Point;
+
+import java.util.ArrayList;
 
 public class Ball {
     private Point location;
     private Point velocity;
     public static final int RADIUS = 10;
+    private int framesUntilNextCollision;
+    private Edge nextCollision;
     public Ball(Point location, Point velocity){
         this.location = location;
         this.velocity = velocity;
@@ -33,5 +38,7 @@ public class Ball {
     public Point getLowestPoint(){
         return location.add(0, Ball.RADIUS);
     }
+    public void calculateNextCollision(ArrayList<Edge> edges, int wall_width){
 
+    }
 }
