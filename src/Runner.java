@@ -90,6 +90,7 @@ public class Runner extends JPanel {
             }
         }
         g.setStroke(new BasicStroke(WALL_WIDTH));
+        g.drawLine(10, 50, 100, 50);
         if(first != Point.NULL_LOCATION){
             Point current = listener.getCurrentLocation().add(0, -30);
             g.fillOval(first.x - SMALL_CIRCLE_RADIUS, first.y - SMALL_CIRCLE_RADIUS, SMALL_CIRCLE_RADIUS * 2, SMALL_CIRCLE_RADIUS * 2);

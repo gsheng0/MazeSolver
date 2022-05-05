@@ -44,6 +44,9 @@ public class Point {
         }
         return false;
     }
+    public Point copy(){
+        return new Point(double_x, double_y);
+    }
 
 
 
