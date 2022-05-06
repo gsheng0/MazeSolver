@@ -1,10 +1,12 @@
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import util.Edge;
 import util.Point;
 import util.Result;
+import util.Util;
 
 public class Runner extends JPanel {
     private JFrame frame;
@@ -24,8 +26,8 @@ public class Runner extends JPanel {
     private Point first = Point.NULL_LOCATION;
     private ArrayList<Edge> edges = new ArrayList<>();
     private ArrayList<Ball> balls = new ArrayList<>();
-    Ball ball = new Ball(new Point(WINDOW_WIDTH/2, WINDOW_HEIGHT/2), new Point(0, 0));
-    //0.04, 0.04
+    Ball ball = new Ball(new Point(WINDOW_WIDTH/2, WINDOW_HEIGHT/2), new Point(0.04, 0.04));
+
 
     public Runner(){
         listener = Listener.getInstance();
@@ -50,8 +52,27 @@ public class Runner extends JPanel {
     public void paintComponent(Graphics graphics){
         super.paintComponent(graphics);
         Graphics2D g = (Graphics2D)graphics;
+
         //handling actions
-        ball.move();
+        if(listener.start) {
+            ball.move();
+            if(ball.getFramesUntilNextCollision() < 1){
+                if(ball.getOrientationOfCollision() == Edge.HORIZONTAL){
+                    ball.hitHorizontalWall();
+                }
+                else if(ball.getOrientationOfCollision() == Edge.VERTICAL){
+                    ball.hitVerticalWall();
+                }
+                ball.calculateNextCollision(edges, WALL_WIDTH);
+            }
+
+        }
+
+        if(ball.getFramesUntilNextCollision() >= 0){
+            System.out.println("There is a collision expected soon");
+            g.drawOval(ball.getNextCollisionPoint().x - SMALL_CIRCLE_RADIUS * 4, ball.getNextCollisionPoint().y - SMALL_CIRCLE_RADIUS * 4, SMALL_CIRCLE_RADIUS * 8, SMALL_CIRCLE_RADIUS * 8);
+        }
+
         if(!listener.getLastClicked().equals(Point.NULL_LOCATION)){
             //if the previously released coordinates is not the null location
             if(listener.getButton() == Listener.LEFT_MOUSE_BUTTON) {
@@ -64,21 +85,12 @@ public class Runner extends JPanel {
             }
             listener.clearLastClicked();
         }
-        if(listener.upArrow){
-            ball.move(0, -0.04);
-        }
-        if(listener.downArrow){
-            ball.move(0, 0.04);
-        }
-        if(listener.leftArrow){
-            ball.move(-0.04, 0);
-        }
-        if(listener.rightArrow){
-            ball.move(0.04, 0);
-        }
+
+
 
         //actual graphics
         g.setColor(Color.BLACK);
+
         g.fillOval(ball.getLocation().x - Ball.RADIUS, ball.getLocation().y - Ball.RADIUS, Ball.RADIUS * 2, Ball.RADIUS * 2);
         //g.drawRect(MARGIN_SIZE, MARGIN_SIZE, WINDOW_WIDTH - 2 * MARGIN_SIZE, WINDOW_HEIGHT - 2 * MARGIN_SIZE);
         for(Point[] row : intersections){
@@ -90,7 +102,6 @@ public class Runner extends JPanel {
             }
         }
         g.setStroke(new BasicStroke(WALL_WIDTH));
-        g.drawLine(10, 50, 100, 50);
         if(first != Point.NULL_LOCATION){
             Point current = listener.getCurrentLocation().add(0, -30);
             g.fillOval(first.x - SMALL_CIRCLE_RADIUS, first.y - SMALL_CIRCLE_RADIUS, SMALL_CIRCLE_RADIUS * 2, SMALL_CIRCLE_RADIUS * 2);

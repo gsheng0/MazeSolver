@@ -22,7 +22,7 @@ public class Point {
         this.double_x = x;
         this.double_y = y;
     }
-    public String toString() { return "( " + x + ", " + y + ")"; }
+    public String toString() { return "(" + x + ", " + y + ")"; }
     public double distanceFrom(Point other){
         int delta_x = other.x - this.x;
         int delta_y = other.y - this.y;

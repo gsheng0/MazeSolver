@@ -27,8 +27,6 @@ public class Edge {
         return new Edge(p1.copy(), p2.copy());
     }
     //lines are drawn with the center at the specified coordinates
-    //for horizontal lines, the line does not go past the x coordinates
-    //for vertical lines, the line does not go past the y coordinates
     public Edge getRightSide(int wall_width){
         //add half of wall width to x coordinates
         if(orientation == VERTICAL) {
