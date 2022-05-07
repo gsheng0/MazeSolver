@@ -42,9 +42,6 @@ public class Ball {
     public Point getNextCollisionPoint() { return nextCollision; }
     public int getOrientationOfCollision() { return collisionOrientation; }
     public int getFramesUntilNextCollision() { return framesUntilNextCollision; }
-    public void move(double x, double y){
-        this.location = this.location.add(x, y);
-    }
     public void hitVerticalWall(){
         velocity = new Point(velocity.double_x * -1, velocity.double_y);
     }
@@ -65,7 +62,10 @@ public class Ball {
     }
     public void calculateNextCollision(ArrayList<Edge> edges, int wall_width){
         ArrayList<Edge> inPath = new ArrayList<>();
-        Point future = this.location.add(location.double_x + (10000.0 * velocity.double_x), location.double_y + (10000.0 * velocity.double_y));
+        Point future = this.location.add(10000.0 * velocity.double_x, 10000.0 * velocity.double_y);
+        System.out.println("Current Velocity: " + velocity);
+        System.out.println("Current Location: " + location);
+        System.out.println("Future Location: " + future);
         for(Edge edge : edges){
             ArrayList<Edge> edgesToCheck = new ArrayList<>();
             if(velocity.double_x > 0){
@@ -107,8 +107,9 @@ public class Ball {
             }
         }
         if(closest == Point.NULL_LOCATION){
-            System.out.println("No intersection point found");
+            System.out.println("No collisions found");
             framesUntilNextCollision = -1;
+            System.out.println();
             return;
         }
         nextCollision = closest;
@@ -126,5 +127,6 @@ public class Ball {
 
         System.out.println("Collision expected on frame " + expectedFrame);
         System.out.println("Collision point: " + nextCollision);
+        System.out.println();
     }
 }

@@ -24,7 +24,7 @@ public class Runner extends JPanel {
     private Point first = Point.NULL_LOCATION;
     private ArrayList<Edge> edges = new ArrayList<>();
     private ArrayList<Ball> balls = new ArrayList<>();
-    private Point velocity = new Point(-0.5, -0.5);
+    private Point velocity = new Point(-1 , 1);
     Ball ball = new Ball(new Point(WINDOW_WIDTH/4 * 3, WINDOW_HEIGHT/4 * 3), velocity);
     public static int FRAME_NUMBER = 0;
 
