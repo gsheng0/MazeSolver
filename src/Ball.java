@@ -9,27 +9,46 @@ public class Ball {
     private Point velocity;
     public static final int RADIUS = 10;
     private int framesUntilNextCollision = -1;
-    private int orientation = Edge.DIAGONAL;
+    private int collisionOrientation = Edge.DIAGONAL;
     private Point nextCollision = Point.NULL_LOCATION;
     public Ball(Point location, Point velocity){
         this.location = location;
         this.velocity = velocity;
     }
     public Point getLocation(){ return location; }
-    public void move(){
+    public void move(ArrayList<Edge> edges, int wall_width){
         location = Point.add(location, velocity);
-        framesUntilNextCollision--;
+        if(framesUntilNextCollision > 0) {
+            framesUntilNextCollision--;
+        }
+        else if(framesUntilNextCollision == 0){
+            if(collisionOrientation == Edge.HORIZONTAL){
+                System.out.println("Ball hit a horizontal wall on frame " + Runner.FRAME_NUMBER);
+                hitHorizontalWall();
+                calculateNextCollision(edges, wall_width);
+            }
+            else if(collisionOrientation == Edge.VERTICAL){
+                System.out.println("Ball hit a vertical wall on frame " + Runner.FRAME_NUMBER);
+                hitVerticalWall();
+                calculateNextCollision(edges, wall_width);
+            }
+        }
+        else {
+            calculateNextCollision(edges, wall_width);
+        }
+
+
     }
     public Point getNextCollisionPoint() { return nextCollision; }
-    public int getOrientationOfCollision() { return orientation; }
+    public int getOrientationOfCollision() { return collisionOrientation; }
     public int getFramesUntilNextCollision() { return framesUntilNextCollision; }
     public void move(double x, double y){
         this.location = this.location.add(x, y);
     }
-    public void hitHorizontalWall(){
+    public void hitVerticalWall(){
         velocity = new Point(velocity.double_x * -1, velocity.double_y);
     }
-    public void hitVerticalWall(){
+    public void hitHorizontalWall(){
         velocity = new Point(velocity.double_x, velocity.double_y * -1);
     }
     public Point getRightmostPoint(){
@@ -46,7 +65,7 @@ public class Ball {
     }
     public void calculateNextCollision(ArrayList<Edge> edges, int wall_width){
         ArrayList<Edge> inPath = new ArrayList<>();
-        Point future = this.location.add(10000.0 * velocity.double_x, 10000.0 * velocity.double_y);
+        Point future = this.location.add(location.double_x + (10000.0 * velocity.double_x), location.double_y + (10000.0 * velocity.double_y));
         for(Edge edge : edges){
             ArrayList<Edge> edgesToCheck = new ArrayList<>();
             if(velocity.double_x > 0){
@@ -69,7 +88,7 @@ public class Ball {
             }
 
             //finding edges that will be in the path of the ball
-            for(Edge edge1 : edges){
+            for(Edge edge1 : edgesToCheck){
                 if(Util.intersects(location, future, edge1.p1, edge1.p2)){
                     inPath.add(edge1);
                 }
@@ -84,21 +103,28 @@ public class Ball {
             if(distance < minDistance){
                 minDistance = distance;
                 closest = intersection;
-                orientation = edge.orientation;
+                collisionOrientation = edge.orientation;
             }
         }
-
-        nextCollision = closest;
-
-        if(velocity.x != 0) {
-            framesUntilNextCollision = (closest.x - location.x) / velocity.x;
+        if(closest == Point.NULL_LOCATION){
+            System.out.println("No intersection point found");
+            framesUntilNextCollision = -1;
+            return;
         }
-        else if(velocity.y != 0){
-            framesUntilNextCollision = (closest.y - location.y) / velocity.y;
+        nextCollision = closest;
+        if(velocity.double_x != 0) {
+            framesUntilNextCollision = (int)((closest.double_x - location.double_x) / velocity.double_x);
+        }
+        else if(velocity.double_y != 0){
+            framesUntilNextCollision = (int)((closest.double_y - location.double_y) / velocity.double_y);
         }
         else{
             framesUntilNextCollision = -1;
             nextCollision = Point.NULL_LOCATION;
         }
+        int expectedFrame = framesUntilNextCollision + Runner.FRAME_NUMBER;
+
+        System.out.println("Collision expected on frame " + expectedFrame);
+        System.out.println("Collision point: " + nextCollision);
     }
 }

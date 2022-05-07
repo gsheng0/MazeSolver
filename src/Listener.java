@@ -81,7 +81,7 @@ public class Listener implements MouseListener, KeyListener, MouseMotionListener
         else if(code == KeyEvent.VK_UP){
             upArrow = false;
         }
-        else if(code == KeyEvent.VK_ENTER){
+        else if(code == KeyEvent.VK_SPACE){
             start = !start;
         }
     }

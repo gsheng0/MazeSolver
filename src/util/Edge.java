@@ -77,5 +77,6 @@ public class Edge {
             return this.copy();
         }
     }
+    public String toString() { return "Edge: " + p1 + " " + p2; }
 
 }

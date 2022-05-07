@@ -1,12 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 import util.Edge;
 import util.Point;
 import util.Result;
-import util.Util;
 
 public class Runner extends JPanel {
     private JFrame frame;
@@ -26,7 +24,9 @@ public class Runner extends JPanel {
     private Point first = Point.NULL_LOCATION;
     private ArrayList<Edge> edges = new ArrayList<>();
     private ArrayList<Ball> balls = new ArrayList<>();
-    Ball ball = new Ball(new Point(WINDOW_WIDTH/2, WINDOW_HEIGHT/2), new Point(0.04, 0.04));
+    private Point velocity = new Point(-0.5, -0.5);
+    Ball ball = new Ball(new Point(WINDOW_WIDTH/4 * 3, WINDOW_HEIGHT/4 * 3), velocity);
+    public static int FRAME_NUMBER = 0;
 
 
     public Runner(){
@@ -53,34 +53,24 @@ public class Runner extends JPanel {
         super.paintComponent(graphics);
         Graphics2D g = (Graphics2D)graphics;
 
+
         //handling actions
         if(listener.start) {
-            ball.move();
-            if(ball.getFramesUntilNextCollision() < 1){
-                if(ball.getOrientationOfCollision() == Edge.HORIZONTAL){
-                    ball.hitHorizontalWall();
-                }
-                else if(ball.getOrientationOfCollision() == Edge.VERTICAL){
-                    ball.hitVerticalWall();
-                }
-                ball.calculateNextCollision(edges, WALL_WIDTH);
-            }
-
+            FRAME_NUMBER++;
+            ball.move(edges, WALL_WIDTH);
         }
 
         if(ball.getFramesUntilNextCollision() >= 0){
-            System.out.println("There is a collision expected soon");
+            g.drawLine(ball.getLocation().x, ball.getLocation().y, ball.getNextCollisionPoint().x, ball.getNextCollisionPoint().y);
             g.drawOval(ball.getNextCollisionPoint().x - SMALL_CIRCLE_RADIUS * 4, ball.getNextCollisionPoint().y - SMALL_CIRCLE_RADIUS * 4, SMALL_CIRCLE_RADIUS * 8, SMALL_CIRCLE_RADIUS * 8);
         }
 
         if(!listener.getLastClicked().equals(Point.NULL_LOCATION)){
             //if the previously released coordinates is not the null location
             if(listener.getButton() == Listener.LEFT_MOUSE_BUTTON) {
-                ball.hitHorizontalWall();
                 updateIntersections(listener.getLastClicked());
             }
             else if(listener.getButton() == Listener.RIGHT_MOUSE_BUTTON){
-                ball.hitVerticalWall();
                 first = Point.NULL_LOCATION;
             }
             listener.clearLastClicked();
