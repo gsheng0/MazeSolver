@@ -24,10 +24,9 @@ public class Runner extends JPanel {
     private Point first = Point.NULL_LOCATION;
     private ArrayList<Edge> edges = new ArrayList<>();
     private ArrayList<Ball> balls = new ArrayList<>();
-    private Point velocity = new Point(-1 , 1);
+    private Point velocity = new Point(-0.2 , 0.2);
     Ball ball = new Ball(new Point(WINDOW_WIDTH/4 * 3, WINDOW_HEIGHT/4 * 3), velocity);
     public static int FRAME_NUMBER = 0;
-
 
     public Runner(){
         listener = Listener.getInstance();
@@ -60,10 +59,7 @@ public class Runner extends JPanel {
             ball.move(edges, WALL_WIDTH);
         }
 
-        if(ball.getFramesUntilNextCollision() >= 0){
-            g.drawLine(ball.getLocation().x, ball.getLocation().y, ball.getNextCollisionPoint().x, ball.getNextCollisionPoint().y);
-            g.drawOval(ball.getNextCollisionPoint().x - SMALL_CIRCLE_RADIUS * 4, ball.getNextCollisionPoint().y - SMALL_CIRCLE_RADIUS * 4, SMALL_CIRCLE_RADIUS * 8, SMALL_CIRCLE_RADIUS * 8);
-        }
+
 
         if(!listener.getLastClicked().equals(Point.NULL_LOCATION)){
             //if the previously released coordinates is not the null location
@@ -99,6 +95,12 @@ public class Runner extends JPanel {
         }
         for(Edge edge : edges){
             g.drawLine(edge.p1.x, edge.p1.y, edge.p2.x, edge.p2.y);
+        }
+        g.setStroke(new BasicStroke(1));
+        g.setColor(Color.RED);
+        if(ball.getFramesUntilNextCollision() >= 0){
+            g.drawLine(ball.getLocation().x, ball.getLocation().y, ball.getNextCollisionPoint().x, ball.getNextCollisionPoint().y);
+            g.drawOval(ball.getNextCollisionPoint().x - SMALL_CIRCLE_RADIUS * 4, ball.getNextCollisionPoint().y - SMALL_CIRCLE_RADIUS * 4, SMALL_CIRCLE_RADIUS * 8, SMALL_CIRCLE_RADIUS * 8);
         }
         repaint();
     }

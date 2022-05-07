@@ -20,6 +20,7 @@ public class Ball {
         location = Point.add(location, velocity);
         if(framesUntilNextCollision > 0) {
             framesUntilNextCollision--;
+            //System.out.println("Frame counter: " + framesUntilNextCollision);
         }
         else if(framesUntilNextCollision == 0){
             if(collisionOrientation == Edge.HORIZONTAL){
@@ -30,6 +31,12 @@ public class Ball {
             else if(collisionOrientation == Edge.VERTICAL){
                 System.out.println("Ball hit a vertical wall on frame " + Runner.FRAME_NUMBER);
                 hitVerticalWall();
+                calculateNextCollision(edges, wall_width);
+            }
+            else if(collisionOrientation == Edge.DIAGONAL){
+                System.out.println("Ball hit a diagonal wall on frame " + Runner.FRAME_NUMBER);
+                hitVerticalWall();
+                hitHorizontalWall();
                 calculateNextCollision(edges, wall_width);
             }
         }
@@ -100,7 +107,7 @@ public class Ball {
         for(Edge edge : inPath){
             Point intersection = Util.getIntersectionPoint(location, future, edge.p1, edge.p2);
             double distance = intersection.distanceFrom(location);
-            if(distance < minDistance){
+            if(distance < minDistance && distance > RADIUS){
                 minDistance = distance;
                 closest = intersection;
                 collisionOrientation = edge.orientation;
@@ -112,12 +119,16 @@ public class Ball {
             System.out.println();
             return;
         }
+        //calculating number of frames to adjust for
+        double velocityMagnitude = Math.sqrt(velocity.double_x * velocity.double_x + velocity.double_y * velocity.double_y);
+        int adjusted = (int)(RADIUS / velocityMagnitude);
+
         nextCollision = closest;
         if(velocity.double_x != 0) {
-            framesUntilNextCollision = (int)((closest.double_x - location.double_x) / velocity.double_x);
+            framesUntilNextCollision = (int)((closest.double_x - location.double_x) / velocity.double_x) - adjusted;
         }
         else if(velocity.double_y != 0){
-            framesUntilNextCollision = (int)((closest.double_y - location.double_y) / velocity.double_y);
+            framesUntilNextCollision = (int)((closest.double_y - location.double_y) / velocity.double_y) - adjusted;
         }
         else{
             framesUntilNextCollision = -1;
