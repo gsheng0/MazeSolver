@@ -55,7 +55,8 @@ public class Point {
         String filtered = Util.removeLeadingAndTrailingWhiteSpace(Util.filterNonNumericCharacters(string));
         String condensed = Util.condenseSpaces(filtered);
         //condensed should now contain "x y"
-
+        System.out.println("Filtered: " + filtered);
+        System.out.println("Condensed: " + condensed);
         String[] numbers = condensed.split(" ");
         return new Point(Double.parseDouble(numbers[0]), Double.parseDouble(numbers[1]));
 

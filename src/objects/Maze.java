@@ -34,7 +34,7 @@ public class Maze {
      */
     //this method only needs the matrix of intersections to find the coordinates of the walls of the maze
     public static boolean load(ArrayList<Edge> edges, Point[][] intersections){
-        File file = Util.promptUserForFile("Please elect file to load maze from");
+        File file = Util.promptUserForFile("Please select file to load maze from");
         if(file == null){
             return false;
         }
@@ -43,15 +43,26 @@ public class Maze {
         if(!Util.readFromFile(path, data)){
             return false;
         }
+        System.out.println(data);
         try{
-            int width = Integer.parseInt(data.get(0));
-            int height = Integer.parseInt(data.get(1));
-            if(width >= intersections.length || height >= intersections[0].length){
-                return false;
-            }
+            edges.clear();
             for(int i = 2; i < data.size(); i++){
                 String line = data.get(i);
-                String[] stringOfPoints = line.split(" ");
+                String[] stringOfPoints = new String[2];
+                int x = 0;
+                for(; x < line.length(); x++){
+                    char c = line.charAt(x);
+                    if(c == ')' && line.charAt(x + 1) == ' ' && line.charAt(x + 2) == '('){
+                        break;
+                    }
+                }
+                stringOfPoints[0] = line.substring(0, x + 1);
+                stringOfPoints[1] = line.substring(x + 2);
+
+                for(String string : stringOfPoints){
+                    System.out.println("String: " + string);
+                }
+                System.out.println();
                 Point first = Point.parsePoint(stringOfPoints[0]);
                 Point second = Point.parsePoint(stringOfPoints[1]);
                 Point p1 = intersections[first.x][first.y];
@@ -59,6 +70,8 @@ public class Maze {
                 edges.add(new Edge(p1, p2));
 
             }
+            System.out.println("Printing out edges");
+            System.out.println(edges);
             return true;
         }
         catch(NumberFormatException e){
@@ -74,7 +87,7 @@ public class Maze {
 
     //This method needs to know how large the cells are and the margin size to figure out the coordinates of the edges of the maze
     public static boolean load(ArrayList<Edge> edges, int cell_width, int cell_height, int margin_size){
-        File file = Util.promptUserForFile("Please elect file to load maze from");
+        File file = Util.promptUserForFile("Please select file to load maze from");
         if(file == null){
             return false;
         }
@@ -84,6 +97,7 @@ public class Maze {
             return false;
         }
         try{
+            edges = new ArrayList<>();
             for(int i = 2; i < data.size(); i++){
                 String line = data.get(i);
                 String[] stringOfPoints = line.split(" ");

@@ -93,6 +93,7 @@ public class Listener implements MouseListener, KeyListener, MouseMotionListener
     @Override
     public void mousePressed(MouseEvent e) {
         pressed = true;
+        System.out.println("Clicked at: " + e.getPoint());
     }
 
     @Override

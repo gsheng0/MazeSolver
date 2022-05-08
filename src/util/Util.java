@@ -96,6 +96,9 @@ public class Util {
             else if(c >= '0' && c <= '9'){
                 builder.append(c);
             }
+            else if(c == '.'){
+                builder.append(c);
+            }
         }
         return builder.toString();
     }
@@ -134,6 +137,7 @@ public class Util {
                 }
             }
             else{
+                builder.append(c);
                 seenSpace = false;
             }
         }

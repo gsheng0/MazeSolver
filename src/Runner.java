@@ -1,14 +1,18 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 
 import objects.Ball;
+import objects.Maze;
 import util.Edge;
 import util.Point;
 import util.Result;
 
 public class Runner extends JPanel {
     private JFrame frame;
+    private JMenuBar menuBar;
+    private JButton saveButton, loadButton;
     private Listener listener;
     private ArrayList<Point> list = new ArrayList<>();
     private Point[][] intersections;
@@ -30,35 +34,50 @@ public class Runner extends JPanel {
     public static int FRAME_NUMBER = 0;
 
     public Runner(){
-        listener = Listener.getInstance();
-        listener.setPointList(list);
-        frame = new JFrame();
-        frame.add(this);
-        frame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-        frame.setVisible(true);
-        frame.setLocation(250, 100);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.addMouseListener(listener);
-        frame.addKeyListener(listener);
-        frame.addMouseMotionListener(listener);
-
         intersections = new Point[NUM_HORIZONTAL_INTERSECTIONS + 1][NUM_VERTICAL_INTERSECTIONS + 1];
         for(int x = 0; x <= NUM_HORIZONTAL_INTERSECTIONS; x++){
             for(int y = 0; y <= NUM_VERTICAL_INTERSECTIONS; y++){
                 intersections[x][y] = new Point(MARGIN_SIZE + x * CELL_WIDTH, MARGIN_SIZE + y * CELL_HEIGHT);
             }
         }
-
         for(int i = 0; i < NUMBER_OF_BALLS; i++){
             balls.add(new Ball(startingPosition, Ball.generateVelocity(2.0)));
         }
 
+        listener = Listener.getInstance();
+        listener.setPointList(list);
+        frame = new JFrame();
+        frame.add(this);
+        frame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 
+        frame.setLocation(250, 100);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.addMouseListener(listener);
+        frame.addKeyListener(listener);
+        frame.addMouseMotionListener(listener);
+
+        menuBar = new JMenuBar();
+        menuBar.add(getSpacer());
+
+        saveButton = new JButton();
+        saveButton.addActionListener(this::saveCurrentMaze);
+        saveButton.setText("Save");
+
+        loadButton = new JButton();
+        loadButton.addActionListener(this::loadMaze);
+        loadButton.setText("Load");
+
+        menuBar.add(saveButton);
+        menuBar.add(getSpacer());
+        menuBar.add(loadButton);
+        menuBar.add(getSpacer());
+        frame.setJMenuBar(menuBar);
+        frame.setVisible(true);
     }
+
     public void paintComponent(Graphics graphics){
         super.paintComponent(graphics);
         Graphics2D g = (Graphics2D)graphics;
-
 
         //handling actions
         if(listener.start) {
@@ -100,7 +119,7 @@ public class Runner extends JPanel {
         }
         g.setStroke(new BasicStroke(WALL_WIDTH));
         if(first != Point.NULL_LOCATION){
-            Point current = listener.getCurrentLocation().add(0, -30);
+            Point current = listener.getCurrentLocation().add(0, -60);
             g.fillOval(first.x - SMALL_CIRCLE_RADIUS, first.y - SMALL_CIRCLE_RADIUS, SMALL_CIRCLE_RADIUS * 2, SMALL_CIRCLE_RADIUS * 2);
             g.drawLine(first.x, first.y, current.x, current.y);
         }
@@ -125,7 +144,9 @@ public class Runner extends JPanel {
         return new Result<>(intersections[x][y]);
     }
     public void updateIntersections(Point location){
-        Point adjusted = location.add(0, -30);
+        //-30 pixels without menubar
+        //-60 with menubar
+        Point adjusted = location.add(0, -60);
         Result<Point> result = getClosestIntersection(adjusted);
         if(result.error()){
             first = Point.NULL_LOCATION;
@@ -153,7 +174,30 @@ public class Runner extends JPanel {
             first = Point.NULL_LOCATION;
         }
     }
-
+    public static JMenu getSpacer(int x) { //returns empty menu that provides spacing between non empty options on menu
+        JMenu output = new JMenu();
+        output.setEnabled(false);
+        Dimension dim = new Dimension(x, 1);
+        output.setMinimumSize(dim);
+        output.setPreferredSize(dim);
+        output.setMaximumSize(dim);
+        return output;
+    }
+    public void saveCurrentMaze(ActionEvent e){
+        Maze maze = new Maze(edges, NUM_HORIZONTAL_INTERSECTIONS, NUM_VERTICAL_INTERSECTIONS, CELL_WIDTH, CELL_HEIGHT, MARGIN_SIZE);
+        maze.save();
+    }
+    public void loadMaze(ActionEvent e){
+        if(Maze.load(edges, intersections)){
+            System.out.println("Successfully loaded maze");
+        }
+        else{
+            System.out.println("Failed to load maze");
+        }
+    }
+    public static JMenu getSpacer() {
+        return getSpacer(20);
+    }
     public static void main(String[] args){
         new Runner();
     }
