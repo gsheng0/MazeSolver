@@ -1,7 +1,10 @@
 package util;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -31,24 +34,111 @@ public class Util {
                 determinant(det, xDiff) / determinant,
                 determinant(det, yDiff) / determinant);
     }
-    public ArrayList<String> readFromFile(String filename){
+    public static boolean readFromFile(String filename, ArrayList<String> lines){
+        //lines read from file do not contain new line escape character
         try{
             File file = new File(filename);
             Scanner reader = new Scanner(file);
-            ArrayList<String> lines = new ArrayList<>();
             while(reader.hasNextLine()){
                 lines.add(reader.nextLine());
             }
             reader.close();
-            return lines;
+            return true;
         }
         catch(FileNotFoundException e){
             System.out.println("Error: File not found");
             e.printStackTrace();
+            return false;
         }
         catch(Exception e){
+            return false;
         }
-        return new ArrayList<>();
+
     }
+    public static boolean writeToFile(String filename, ArrayList<String> lines){
+        //assuming that file already exists
+        try{
+            FileWriter writer = new FileWriter(filename);
+            for(String line : lines){
+                writer.write(line);
+                writer.write("\n");  //filewriter does not automatically write new lines
+            }
+            writer.close();
+        }
+        catch(IOException exception){
+            exception.printStackTrace();
+            return false;
+        }
+        catch(Exception e){
+            return false;
+        }
+        return true;
+    }
+    public static File promptUserForFile(){
+        JFileChooser jfc = new JFileChooser();
+        jfc.showDialog(null, "Please select a file");
+        jfc.setVisible(true);
+        return jfc.getSelectedFile();
+    }
+    public static File promptUserForFile(String message){
+        JFileChooser jfc = new JFileChooser();
+        jfc.showDialog(null, message);
+        jfc.setVisible(true);
+        return jfc.getSelectedFile();
+    }
+    public static String filterNonNumericCharacters(String string){
+        StringBuilder builder = new StringBuilder();
+        for(int i = 0; i < string.length(); i++){
+            char c = string.charAt(i);
+            if(c == ' '){
+                builder.append(" ");
+            }
+            else if(c >= '0' && c <= '9'){
+                builder.append(c);
+            }
+        }
+        return builder.toString();
+    }
+    public static String removeLeadingWhiteSpace(String string){
+        int i = 0;
+        for(; i < string.length(); i++){
+            char c = string.charAt(i);
+            if(!(c == ' ' || c == '\t' || c == '\n')){
+                break;
+            }
+        }
+        return string.substring(i);
+    }
+    public static String removeTrailingWhiteSpace(String string){
+        int index = 0;
+        for(int i = 0; i < string.length(); i++){
+            char c = string.charAt(i);
+            if(!(c == ' ' || c == '\t' || c == '\n')){
+                index = i;
+            }
+        }
+        return string.substring(0, index);
+    }
+    public static String removeLeadingAndTrailingWhiteSpace(String string){
+        return removeTrailingWhiteSpace(removeLeadingWhiteSpace(string));
+    }
+    public static String condenseSpaces(String string){
+        StringBuilder builder = new StringBuilder();
+        boolean seenSpace = false;
+        for(int i = 0; i < string.length(); i++){
+            char c = string.charAt(i);
+            if(c == ' '){
+                if(!seenSpace){
+                    builder.append(" ");
+                    seenSpace = true;
+                }
+            }
+            else{
+                seenSpace = false;
+            }
+        }
+        return builder.toString();
+    }
+
 
 }

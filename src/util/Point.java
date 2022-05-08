@@ -29,6 +29,9 @@ public class Point {
 
         return Math.sqrt(delta_x * delta_x + delta_y * delta_y);
     }
+    public Point multiply(double x, double y){
+        return new Point(this.double_x * x, this.double_y * y);
+    }
     public Point add(int x, int y){
         return new Point(this.x + x, this.y + y);
     }
@@ -46,6 +49,16 @@ public class Point {
     }
     public Point copy(){
         return new Point(double_x, double_y);
+    }
+    public static Point parsePoint(String string){
+        //string must have two doubles or integers, spaced out by at least a single space, with any other non number/space characters in between
+        String filtered = Util.removeLeadingAndTrailingWhiteSpace(Util.filterNonNumericCharacters(string));
+        String condensed = Util.condenseSpaces(filtered);
+        //condensed should now contain "x y"
+
+        String[] numbers = condensed.split(" ");
+        return new Point(Double.parseDouble(numbers[0]), Double.parseDouble(numbers[1]));
+
     }
 
 

@@ -2,7 +2,9 @@ package objects;
 
 import util.Edge;
 import util.Point;
+import util.Util;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class Maze {
@@ -22,6 +24,100 @@ public class Maze {
             Point second = new Point(p2.x/cell_width, p2.y/cell_height);
             pairsOfIntersections.add(new Point[]{first, second});
         }
+    }
+    /*
+    Formatting for .mz files:
+    Line 1: Width of the maze, in cells
+    Line 2: Height of the maze, in cells
+    Line 3, 4, ....: Pairs of points representing the edges of the maze, based on the relative position of the points
+
+     */
+    //this method only needs the matrix of intersections to find the coordinates of the walls of the maze
+    public static boolean load(ArrayList<Edge> edges, Point[][] intersections){
+        File file = Util.promptUserForFile("Please elect file to load maze from");
+        if(file == null){
+            return false;
+        }
+        String path = file.getAbsolutePath();
+        ArrayList<String> data = new ArrayList<>();
+        if(!Util.readFromFile(path, data)){
+            return false;
+        }
+        try{
+            int width = Integer.parseInt(data.get(0));
+            int height = Integer.parseInt(data.get(1));
+            if(width >= intersections.length || height >= intersections[0].length){
+                return false;
+            }
+            for(int i = 2; i < data.size(); i++){
+                String line = data.get(i);
+                String[] stringOfPoints = line.split(" ");
+                Point first = Point.parsePoint(stringOfPoints[0]);
+                Point second = Point.parsePoint(stringOfPoints[1]);
+                Point p1 = intersections[first.x][first.y];
+                Point p2 = intersections[second.x][second.y];
+                edges.add(new Edge(p1, p2));
+
+            }
+            return true;
+        }
+        catch(NumberFormatException e){
+            System.out.println("Error: file " + path + " has invalid formatting");
+            e.printStackTrace();
+            return false;
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    //This method needs to know how large the cells are and the margin size to figure out the coordinates of the edges of the maze
+    public static boolean load(ArrayList<Edge> edges, int cell_width, int cell_height, int margin_size){
+        File file = Util.promptUserForFile("Please elect file to load maze from");
+        if(file == null){
+            return false;
+        }
+        String path = file.getAbsolutePath();
+        ArrayList<String> data = new ArrayList<>();
+        if(!Util.readFromFile(path, data)){
+            return false;
+        }
+        try{
+            for(int i = 2; i < data.size(); i++){
+                String line = data.get(i);
+                String[] stringOfPoints = line.split(" ");
+                Point first = Point.parsePoint(stringOfPoints[0]).multiply(cell_width, cell_height).add(margin_size, margin_size);
+                Point second = Point.parsePoint(stringOfPoints[1]).multiply(cell_width, cell_height).add(margin_size, margin_size);
+                edges.add(new Edge(first, second));
+            }
+            return true;
+        }
+        catch(NumberFormatException e){
+            System.out.println("Error: file " + path + " has invalid formatting");
+            e.printStackTrace();
+            return false;
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean save(){
+        File file = Util.promptUserForFile("Please select file to store maze data in");
+        if(file == null){
+            return false;
+        }
+        String path = file.getAbsolutePath();
+
+        ArrayList<String> toBeWritten = new ArrayList<>();
+        toBeWritten.add("" + width);
+        toBeWritten.add("" + height);
+        for(Point[] pair : pairsOfIntersections){
+            toBeWritten.add(pair[0].toString() + " " + pair[1].toString());
+        }
+        return Util.writeToFile(path, toBeWritten);
     }
 
 
