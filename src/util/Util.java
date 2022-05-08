@@ -1,5 +1,11 @@
 package util;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
 public class Util {
 
     public static boolean counterClockwise(Point a, Point b, Point c){
@@ -25,4 +31,24 @@ public class Util {
                 determinant(det, xDiff) / determinant,
                 determinant(det, yDiff) / determinant);
     }
+    public ArrayList<String> readFromFile(String filename){
+        try{
+            File file = new File(filename);
+            Scanner reader = new Scanner(file);
+            ArrayList<String> lines = new ArrayList<>();
+            while(reader.hasNextLine()){
+                lines.add(reader.nextLine());
+            }
+            reader.close();
+            return lines;
+        }
+        catch(FileNotFoundException e){
+            System.out.println("Error: File not found");
+            e.printStackTrace();
+        }
+        catch(Exception e){
+        }
+        return new ArrayList<>();
+    }
+
 }

@@ -1,3 +1,5 @@
+package objects;
+
 import util.Edge;
 import util.Point;
 import util.Util;
@@ -24,17 +26,14 @@ public class Ball {
         }
         else if(framesUntilNextCollision == 0){
             if(collisionOrientation == Edge.HORIZONTAL){
-                System.out.println("Ball hit a horizontal wall on frame " + Runner.FRAME_NUMBER);
                 hitHorizontalWall();
                 calculateNextCollision(edges, wall_width);
             }
             else if(collisionOrientation == Edge.VERTICAL){
-                System.out.println("Ball hit a vertical wall on frame " + Runner.FRAME_NUMBER);
                 hitVerticalWall();
                 calculateNextCollision(edges, wall_width);
             }
             else if(collisionOrientation == Edge.DIAGONAL){
-                System.out.println("Ball hit a diagonal wall on frame " + Runner.FRAME_NUMBER);
                 hitVerticalWall();
                 hitHorizontalWall();
                 calculateNextCollision(edges, wall_width);
@@ -70,9 +69,6 @@ public class Ball {
     public void calculateNextCollision(ArrayList<Edge> edges, int wall_width){
         ArrayList<Edge> inPath = new ArrayList<>();
         Point future = this.location.add(10000.0 * velocity.double_x, 10000.0 * velocity.double_y);
-        System.out.println("Current Velocity: " + velocity);
-        System.out.println("Current Location: " + location);
-        System.out.println("Future Location: " + future);
         for(Edge edge : edges){
             ArrayList<Edge> edgesToCheck = new ArrayList<>();
             if(velocity.double_x > 0){
@@ -114,9 +110,7 @@ public class Ball {
             }
         }
         if(closest == Point.NULL_LOCATION){
-            System.out.println("No collisions found");
             framesUntilNextCollision = -1;
-            System.out.println();
             return;
         }
         //calculating number of frames to adjust for
@@ -134,10 +128,10 @@ public class Ball {
             framesUntilNextCollision = -1;
             nextCollision = Point.NULL_LOCATION;
         }
-        int expectedFrame = framesUntilNextCollision + Runner.FRAME_NUMBER;
-
-        System.out.println("Collision expected on frame " + expectedFrame);
-        System.out.println("Collision point: " + nextCollision);
-        System.out.println();
+    }
+    public static Point generateVelocity(double magnitude){
+        double x_comp = (Math.random() * 2.0 * magnitude) - magnitude;
+        double y_comp = Math.sqrt(magnitude * magnitude - x_comp * x_comp);
+        return new Point(x_comp, y_comp);
     }
 }

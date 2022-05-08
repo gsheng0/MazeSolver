@@ -1,10 +1,17 @@
 import util.Point;
 import util.Util;
 
+import javax.swing.*;
+import java.io.File;
+
 public class Tester {
 
     public static void main(String[] args){
 
-        System.out.println(Util.getIntersectionPoint(new Point(1, 1), new Point(10, 10), new Point(1, 4), new Point(12, 4)));
+        JFileChooser jfc = new JFileChooser();
+        jfc.showDialog(null,"Please Select the File");
+        jfc.setVisible(true);
+        File file = jfc.getSelectedFile();
+        System.out.println("File name " + file.getAbsolutePath());
     }
 }

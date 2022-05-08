@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
+import objects.Ball;
 import util.Edge;
 import util.Point;
 import util.Result;
@@ -24,8 +25,8 @@ public class Runner extends JPanel {
     private Point first = Point.NULL_LOCATION;
     private ArrayList<Edge> edges = new ArrayList<>();
     private ArrayList<Ball> balls = new ArrayList<>();
-    private Point velocity = new Point(-0.2 , 0.2);
-    Ball ball = new Ball(new Point(WINDOW_WIDTH/4 * 3, WINDOW_HEIGHT/4 * 3), velocity);
+    static final Point startingPosition = new Point(125, 125);
+    static final int NUMBER_OF_BALLS = 15;
     public static int FRAME_NUMBER = 0;
 
     public Runner(){
@@ -47,6 +48,12 @@ public class Runner extends JPanel {
                 intersections[x][y] = new Point(MARGIN_SIZE + x * CELL_WIDTH, MARGIN_SIZE + y * CELL_HEIGHT);
             }
         }
+
+        for(int i = 0; i < NUMBER_OF_BALLS; i++){
+            balls.add(new Ball(startingPosition, Ball.generateVelocity(2.0)));
+        }
+
+
     }
     public void paintComponent(Graphics graphics){
         super.paintComponent(graphics);
@@ -55,8 +62,9 @@ public class Runner extends JPanel {
 
         //handling actions
         if(listener.start) {
-            FRAME_NUMBER++;
-            ball.move(edges, WALL_WIDTH);
+            for(Ball ball : balls) {
+                ball.move(edges, WALL_WIDTH);
+            }
         }
 
 
@@ -72,12 +80,15 @@ public class Runner extends JPanel {
             listener.clearLastClicked();
         }
 
-
+        g.setColor(Color.BLUE);
+        for(Ball ball : balls){
+            g.fillOval(ball.getLocation().x - Ball.RADIUS, ball.getLocation().y - Ball.RADIUS, Ball.RADIUS * 2, Ball.RADIUS * 2);
+        }
 
         //actual graphics
         g.setColor(Color.BLACK);
 
-        g.fillOval(ball.getLocation().x - Ball.RADIUS, ball.getLocation().y - Ball.RADIUS, Ball.RADIUS * 2, Ball.RADIUS * 2);
+
         //g.drawRect(MARGIN_SIZE, MARGIN_SIZE, WINDOW_WIDTH - 2 * MARGIN_SIZE, WINDOW_HEIGHT - 2 * MARGIN_SIZE);
         for(Point[] row : intersections){
             for(Point intersection : row) {
@@ -95,12 +106,6 @@ public class Runner extends JPanel {
         }
         for(Edge edge : edges){
             g.drawLine(edge.p1.x, edge.p1.y, edge.p2.x, edge.p2.y);
-        }
-        g.setStroke(new BasicStroke(1));
-        g.setColor(Color.RED);
-        if(ball.getFramesUntilNextCollision() >= 0){
-            g.drawLine(ball.getLocation().x, ball.getLocation().y, ball.getNextCollisionPoint().x, ball.getNextCollisionPoint().y);
-            g.drawOval(ball.getNextCollisionPoint().x - SMALL_CIRCLE_RADIUS * 4, ball.getNextCollisionPoint().y - SMALL_CIRCLE_RADIUS * 4, SMALL_CIRCLE_RADIUS * 8, SMALL_CIRCLE_RADIUS * 8);
         }
         repaint();
     }
@@ -150,17 +155,7 @@ public class Runner extends JPanel {
     }
 
     public static void main(String[] args){
-        Runner runner = new Runner();
+        new Runner();
     }
 }
 
-
-//drawing lines
-//        for(int i = 0; i < list.size() - 1; i++){
-//            Point p1 = list.get(i);
-//            Point p2 = list.get(i + 1);
-//            if((p2.x == -1 && p2.y == -1) || (p1.x == -1 && p1.y == -1)) {
-//                continue;
-//            }
-//            g.drawLine(p1.x, p1.y, p2.x, p2.y);
-//        }
