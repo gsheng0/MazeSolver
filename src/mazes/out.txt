@@ -1,5 +1,0 @@
-Hello
-World
-New line:
-This is the beginnning of the new line!
-Another line

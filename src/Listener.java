@@ -81,9 +81,6 @@ public class Listener implements MouseListener, KeyListener, MouseMotionListener
         else if(code == KeyEvent.VK_UP){
             upArrow = false;
         }
-        else if(code == KeyEvent.VK_SPACE){
-            start = !start;
-        }
     }
 
     @Override
@@ -93,7 +90,6 @@ public class Listener implements MouseListener, KeyListener, MouseMotionListener
     @Override
     public void mousePressed(MouseEvent e) {
         pressed = true;
-        System.out.println("Clicked at: " + e.getPoint());
     }
 
     @Override
@@ -106,9 +102,6 @@ public class Listener implements MouseListener, KeyListener, MouseMotionListener
             button = LEFT_MOUSE_BUTTON;
         }
         pressed = false;
-
-//        list.add(new Point(-1, -1));
-
     }
 
     @Override
@@ -124,11 +117,6 @@ public class Listener implements MouseListener, KeyListener, MouseMotionListener
     @Override
     public void mouseDragged(MouseEvent e) {
         currentLocation = Point.extract_point(e);
-//        int x = e.getX();
-//        int y = e.getY() - 30;
-//        if(pressed) {
-//            list.add(new Point(x, y));
-//        }
     }
 
     @Override

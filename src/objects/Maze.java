@@ -43,7 +43,7 @@ public class Maze {
         if(!Util.readFromFile(path, data)){
             return false;
         }
-        System.out.println(data);
+
         try{
             edges.clear();
             for(int i = 2; i < data.size(); i++){
@@ -59,10 +59,6 @@ public class Maze {
                 stringOfPoints[0] = line.substring(0, x + 1);
                 stringOfPoints[1] = line.substring(x + 2);
 
-                for(String string : stringOfPoints){
-                    System.out.println("String: " + string);
-                }
-                System.out.println();
                 Point first = Point.parsePoint(stringOfPoints[0]);
                 Point second = Point.parsePoint(stringOfPoints[1]);
                 Point p1 = intersections[first.x][first.y];
@@ -70,8 +66,6 @@ public class Maze {
                 edges.add(new Edge(p1, p2));
 
             }
-            System.out.println("Printing out edges");
-            System.out.println(edges);
             return true;
         }
         catch(NumberFormatException e){
@@ -97,7 +91,7 @@ public class Maze {
             return false;
         }
         try{
-            edges = new ArrayList<>();
+            edges.clear();
             for(int i = 2; i < data.size(); i++){
                 String line = data.get(i);
                 String[] stringOfPoints = line.split(" ");

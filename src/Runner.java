@@ -12,7 +12,7 @@ import util.Result;
 public class Runner extends JPanel {
     private JFrame frame;
     private JMenuBar menuBar;
-    private JButton saveButton, loadButton;
+    private JButton saveButton, loadButton, startButton;
     private Listener listener;
     private ArrayList<Point> list = new ArrayList<>();
     private Point[][] intersections;
@@ -32,6 +32,7 @@ public class Runner extends JPanel {
     static final Point startingPosition = new Point(125, 125);
     static final int NUMBER_OF_BALLS = 15;
     public static int FRAME_NUMBER = 0;
+    private boolean start = false;
 
     public Runner(){
         intersections = new Point[NUM_HORIZONTAL_INTERSECTIONS + 1][NUM_VERTICAL_INTERSECTIONS + 1];
@@ -41,7 +42,7 @@ public class Runner extends JPanel {
             }
         }
         for(int i = 0; i < NUMBER_OF_BALLS; i++){
-            balls.add(new Ball(startingPosition, Ball.generateVelocity(2.0)));
+            balls.add(new Ball(startingPosition, Ball.generateVelocity(0.2)));
         }
 
         listener = Listener.getInstance();
@@ -59,6 +60,10 @@ public class Runner extends JPanel {
         menuBar = new JMenuBar();
         menuBar.add(getSpacer());
 
+        startButton = new JButton();
+        startButton.addActionListener(this::startSimulation);
+        startButton.setText("Start");
+
         saveButton = new JButton();
         saveButton.addActionListener(this::saveCurrentMaze);
         saveButton.setText("Save");
@@ -67,6 +72,9 @@ public class Runner extends JPanel {
         loadButton.addActionListener(this::loadMaze);
         loadButton.setText("Load");
 
+        menuBar.add(getSpacer());
+        menuBar.add(startButton);
+        menuBar.add(getSpacer());
         menuBar.add(saveButton);
         menuBar.add(getSpacer());
         menuBar.add(loadButton);
@@ -80,9 +88,20 @@ public class Runner extends JPanel {
         Graphics2D g = (Graphics2D)graphics;
 
         //handling actions
-        if(listener.start) {
+        if(start) {
+            ArrayList<Ball> toRemove = new ArrayList<>();
             for(Ball ball : balls) {
                 ball.move(edges, WALL_WIDTH);
+                if(ball.getFramesUntilNextCollision() < 0){
+                    if(ball.getLocation().x > WINDOW_WIDTH || ball.getLocation().x < 0 || ball.getLocation().y > WINDOW_HEIGHT || ball.getLocation().y < 0){
+                        System.out.println("A ball has solved the maze");
+                        toRemove.add(ball);
+                    }
+                }
+            }
+
+            for(Ball ball : toRemove){
+                balls.remove(ball);
             }
         }
 
@@ -193,6 +212,15 @@ public class Runner extends JPanel {
         }
         else{
             System.out.println("Failed to load maze");
+        }
+    }
+    public void startSimulation(ActionEvent e){
+        start = !start;
+        if(start){
+            startButton.setText("Stop");
+        }
+        else{
+            startButton.setText("Start");
         }
     }
     public static JMenu getSpacer() {
