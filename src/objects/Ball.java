@@ -13,9 +13,11 @@ public class Ball {
     private int framesUntilNextCollision = -1;
     private int collisionOrientation = Edge.DIAGONAL;
     private Point nextCollision = Point.NULL_LOCATION;
+    public final Point startingVelocity;
     public Ball(Point location, Point velocity){
         this.location = location;
         this.velocity = velocity;
+        this.startingVelocity = velocity;
     }
     public Point getLocation(){ return location; }
     public void move(ArrayList<Edge> edges, int wall_width){
