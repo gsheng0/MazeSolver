@@ -29,9 +29,11 @@ public class Runner extends JPanel {
     private Point first = Point.NULL_LOCATION;
     private ArrayList<Edge> edges = new ArrayList<>();
     private ArrayList<Ball> balls = new ArrayList<>();
+    private ArrayList<Ball> solutions = new ArrayList<>();
     static final Point startingPosition = new Point(125, 125);
     static final int NUMBER_OF_BALLS = 15;
     public static int FRAME_NUMBER = 0;
+    int previousLength = 0;
     private boolean start = false;
 
     public Runner(){
@@ -89,19 +91,21 @@ public class Runner extends JPanel {
 
         //handling actions
         if(start) {
-            ArrayList<Ball> toRemove = new ArrayList<>();
             for(Ball ball : balls) {
                 ball.move(edges, WALL_WIDTH);
                 if(ball.getFramesUntilNextCollision() < 0){
                     if(ball.getLocation().x > WINDOW_WIDTH || ball.getLocation().x < 0 || ball.getLocation().y > WINDOW_HEIGHT || ball.getLocation().y < 0){
                         System.out.println("A ball has solved the maze");
-                        toRemove.add(ball);
+                        solutions.add(ball);
                     }
                 }
             }
 
-            for(Ball ball : toRemove){
-                balls.remove(ball);
+            if(previousLength != solutions.size()){
+                for(int i = previousLength; i < solutions.size(); i++){
+                    balls.remove(solutions.get(i));
+                }
+                previousLength = solutions.size();
             }
         }
 
