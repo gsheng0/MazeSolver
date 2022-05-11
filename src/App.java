@@ -10,7 +10,7 @@ import window.Window;
 
 import static util.Constants.*;
 
-public class Runner extends JPanel {
+public class App extends JPanel {
     private JFrame frame;
     private Listener listener;
     private ArrayList<Point> list = new ArrayList<>();
@@ -18,7 +18,7 @@ public class Runner extends JPanel {
     private Simulation simulation;
     private boolean start = false;
 
-    public Runner(){
+    public App(){
         simulation = new Simulation();
 
         listener = Listener.getInstance();
@@ -60,7 +60,7 @@ public class Runner extends JPanel {
         start = !start;
     }
     public static void main(String[] args){
-        new Runner();
+        new App();
     }
 }
 
