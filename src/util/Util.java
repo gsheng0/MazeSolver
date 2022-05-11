@@ -75,14 +75,8 @@ public class Util {
         return true;
     }
     public static File promptUserForFile(){
-        JFileChooser jfc = new JFileChooser();
-        jfc.showDialog(null, "Please select a file");
-        jfc.setVisible(true);
-        return jfc.getSelectedFile();
-    }
-    public static File promptUserForFile(String message){
-        JFileChooser jfc = new JFileChooser();
-        jfc.showDialog(null, message);
+        JFileChooser jfc = new JFileChooser("/Users/gsheng/MazeSolver/src/mazes");
+        jfc.showDialog(null, "Select");
         jfc.setVisible(true);
         return jfc.getSelectedFile();
     }

@@ -34,7 +34,7 @@ public class Maze {
      */
     //this method only needs the matrix of intersections to find the coordinates of the walls of the maze
     public static boolean load(ArrayList<Edge> edges, Point[][] intersections){
-        File file = Util.promptUserForFile("Please select file to load maze from");
+        File file = Util.promptUserForFile();
         if(file == null){
             return false;
         }
@@ -81,7 +81,7 @@ public class Maze {
 
     //This method needs to know how large the cells are and the margin size to figure out the coordinates of the edges of the maze
     public static boolean load(ArrayList<Edge> edges, int cell_width, int cell_height, int margin_size){
-        File file = Util.promptUserForFile("Please select file to load maze from");
+        File file = Util.promptUserForFile();
         if(file == null){
             return false;
         }
@@ -113,7 +113,7 @@ public class Maze {
     }
 
     public boolean save(){
-        File file = Util.promptUserForFile("Please select file to store maze data in");
+        File file = Util.promptUserForFile();
         if(file == null){
             return false;
         }
