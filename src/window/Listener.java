@@ -1,4 +1,5 @@
-import javafx.scene.input.KeyCode;
+package window;
+
 import util.Point;
 
 import javax.swing.*;
