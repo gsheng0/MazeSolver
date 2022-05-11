@@ -8,31 +8,23 @@ import objects.Maze;
 import util.Edge;
 import util.Point;
 import util.Result;
+import window.Artist;
+
+import static simulation.Constants.*;
 
 public class Runner extends JPanel {
     private JFrame frame;
     private JMenuBar menuBar;
-    private JButton saveButton, loadButton, startButton;
+    private JButton saveButton, loadButton, startButton, traceButton;
     private Listener listener;
     private ArrayList<Point> list = new ArrayList<>();
     private Point[][] intersections;
-    static final int WINDOW_WIDTH = 1100;
-    static final int WINDOW_HEIGHT = 800;
-    static final int MARGIN_SIZE = 100;
-    static final int NUM_HORIZONTAL_INTERSECTIONS = 10;
-    static final int NUM_VERTICAL_INTERSECTIONS = 7;
-    static int CELL_WIDTH = (WINDOW_WIDTH - 2 * MARGIN_SIZE) / NUM_HORIZONTAL_INTERSECTIONS;
-    static int CELL_HEIGHT = (WINDOW_HEIGHT - 2 * MARGIN_SIZE) / NUM_VERTICAL_INTERSECTIONS;
-    static final int SMALL_CIRCLE_HIT_BOX_SIZE = 40;
-    static final int SMALL_CIRCLE_RADIUS = 5;
-    static int WALL_WIDTH = 2 * SMALL_CIRCLE_RADIUS + 2;
+
     private Point first = Point.NULL_LOCATION;
     private ArrayList<Edge> edges = new ArrayList<>();
     private ArrayList<Ball> balls = new ArrayList<>();
     private ArrayList<Ball> solutions = new ArrayList<>();
-    static final Point startingPosition = new Point(125, 125);
-    static final int NUMBER_OF_BALLS = 15;
-    public static int FRAME_NUMBER = 0;
+
     int previousLength = 0;
     private boolean start = false;
 
@@ -74,12 +66,18 @@ public class Runner extends JPanel {
         loadButton.addActionListener(this::loadMaze);
         loadButton.setText("Load");
 
+        traceButton = new JButton();
+        traceButton.addActionListener(this::traceSolutions);
+        traceButton.setText("Trace");
+
         menuBar.add(getSpacer());
         menuBar.add(startButton);
         menuBar.add(getSpacer());
         menuBar.add(saveButton);
         menuBar.add(getSpacer());
         menuBar.add(loadButton);
+        menuBar.add(getSpacer());
+        menuBar.add(traceButton);
         menuBar.add(getSpacer());
         frame.setJMenuBar(menuBar);
         frame.setVisible(true);
@@ -88,6 +86,7 @@ public class Runner extends JPanel {
     public void paintComponent(Graphics graphics){
         super.paintComponent(graphics);
         Graphics2D g = (Graphics2D)graphics;
+        Artist.graphics = g;
 
         //handling actions
         if(start) {
@@ -123,32 +122,13 @@ public class Runner extends JPanel {
         }
 
         g.setColor(Color.BLUE);
-        for(Ball ball : balls){
-            g.fillOval(ball.getLocation().x - Ball.RADIUS, ball.getLocation().y - Ball.RADIUS, Ball.RADIUS * 2, Ball.RADIUS * 2);
-        }
+        Artist.drawBalls(balls);
 
-        //actual graphics
         g.setColor(Color.BLACK);
-
-
-        //g.drawRect(MARGIN_SIZE, MARGIN_SIZE, WINDOW_WIDTH - 2 * MARGIN_SIZE, WINDOW_HEIGHT - 2 * MARGIN_SIZE);
-        for(Point[] row : intersections){
-            for(Point intersection : row) {
-                int x = intersection.x;
-                int y = intersection.y;
-                g.drawOval(x - SMALL_CIRCLE_RADIUS, y - SMALL_CIRCLE_RADIUS, SMALL_CIRCLE_RADIUS * 2, SMALL_CIRCLE_RADIUS * 2);
-                //g.drawOval(x - SMALL_CIRCLE_HIT_BOX_SIZE/2, y - SMALL_CIRCLE_HIT_BOX_SIZE/2, SMALL_CIRCLE_HIT_BOX_SIZE, SMALL_CIRCLE_HIT_BOX_SIZE);
-            }
-        }
+        Artist.drawIntersectionGrid(intersections);
         g.setStroke(new BasicStroke(WALL_WIDTH));
-        if(first != Point.NULL_LOCATION){
-            Point current = listener.getCurrentLocation().add(0, -60);
-            g.fillOval(first.x - SMALL_CIRCLE_RADIUS, first.y - SMALL_CIRCLE_RADIUS, SMALL_CIRCLE_RADIUS * 2, SMALL_CIRCLE_RADIUS * 2);
-            g.drawLine(first.x, first.y, current.x, current.y);
-        }
-        for(Edge edge : edges){
-            g.drawLine(edge.p1.x, edge.p1.y, edge.p2.x, edge.p2.y);
-        }
+        Artist.drawSelectionPreview(first, listener.getCurrentLocation().add(0, -60));
+        Artist.drawEdges(edges);
         repaint();
     }
     public Result<Point> getClosestIntersection(Point location){
@@ -226,6 +206,9 @@ public class Runner extends JPanel {
         else{
             startButton.setText("Start");
         }
+    }
+    public void traceSolutions(ActionEvent e){
+
     }
     public static JMenu getSpacer() {
         return getSpacer(20);
