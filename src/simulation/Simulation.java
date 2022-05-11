@@ -1,10 +1,12 @@
 package simulation;
 
 import objects.Ball;
+import objects.Maze;
 import util.Edge;
 import util.Point;
 import window.Listener;
 
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 
 import static simulation.Constants.*;
@@ -110,6 +112,21 @@ public class Simulation {
         else{
             selection = Point.NULL_LOCATION;
         }
+    }
+    public void saveCurrentMaze(){
+        Maze maze = new Maze(edges, NUM_HORIZONTAL_INTERSECTIONS, NUM_VERTICAL_INTERSECTIONS, CELL_WIDTH, CELL_HEIGHT, MARGIN_SIZE);
+        maze.save();
+    }
+    public void loadMaze(){
+        if(Maze.load(edges, intersections)){
+            System.out.println("Successfully loaded maze");
+        }
+        else{
+            System.out.println("Failed to load maze");
+        }
+    }
+    public void traceSolutions(){
+        
     }
 
 }

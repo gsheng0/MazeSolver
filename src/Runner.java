@@ -3,12 +3,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 
-import objects.Ball;
-import objects.Maze;
 import simulation.Simulation;
-import util.Edge;
 import util.Point;
-import util.Result;
 import window.Artist;
 import window.Listener;
 
@@ -50,15 +46,15 @@ public class Runner extends JPanel {
         startButton.setText("Start");
 
         saveButton = new JButton();
-        saveButton.addActionListener(this::saveCurrentMaze);
+        saveButton.addActionListener(e -> simulation.saveCurrentMaze());
         saveButton.setText("Save");
 
         loadButton = new JButton();
-        loadButton.addActionListener(this::loadMaze);
+        loadButton.addActionListener(e -> simulation.loadMaze());
         loadButton.setText("Load");
 
         traceButton = new JButton();
-        traceButton.addActionListener(this::traceSolutions);
+        traceButton.addActionListener(e -> simulation.traceSolutions());
         traceButton.setText("Trace");
 
         menuBar.add(getSpacer());
@@ -108,18 +104,7 @@ public class Runner extends JPanel {
         output.setMaximumSize(dim);
         return output;
     }
-    public void saveCurrentMaze(ActionEvent e){
-        Maze maze = new Maze(simulation.getEdges(), NUM_HORIZONTAL_INTERSECTIONS, NUM_VERTICAL_INTERSECTIONS, CELL_WIDTH, CELL_HEIGHT, MARGIN_SIZE);
-        maze.save();
-    }
-    public void loadMaze(ActionEvent e){
-        if(Maze.load(simulation.getEdges(), simulation.intersections)){
-            System.out.println("Successfully loaded maze");
-        }
-        else{
-            System.out.println("Failed to load maze");
-        }
-    }
+
     public void startSimulation(ActionEvent e){
         start = !start;
         if(start){
@@ -129,9 +114,7 @@ public class Runner extends JPanel {
             startButton.setText("Start");
         }
     }
-    public void traceSolutions(ActionEvent e){
 
-    }
     public static JMenu getSpacer() {
         return getSpacer(20);
     }
