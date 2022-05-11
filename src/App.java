@@ -1,7 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.util.ArrayList;
 
 import simulation.Simulation;
 import util.Point;
@@ -11,20 +9,16 @@ import window.Window;
 import static util.Constants.*;
 
 public class App extends JPanel {
-    private JFrame frame;
-    private Listener listener;
-    private ArrayList<Point> list = new ArrayList<>();
-    private Point first = Point.NULL_LOCATION;
-    private Simulation simulation;
-    private boolean start = false;
+    public final JFrame frame;
+    public final Listener listener;
+    public final Simulation simulation;
+    private boolean running = false;
 
     public App(){
         simulation = new Simulation();
-
         listener = Listener.getInstance();
-        listener.setPointList(list);
         frame = Window.createFrame(this, listener,
-                this::startSimulation,
+                e -> running = !running,
                 e -> simulation.saveCurrentMaze(),
                 e -> simulation.loadMaze(),
                 e -> simulation.traceSolutions());
@@ -38,7 +32,7 @@ public class App extends JPanel {
         Artist.graphics = g;
 
         //handling actions
-        if(start) {
+        if(running) {
             simulation.simulate();
         }
 
@@ -52,12 +46,9 @@ public class App extends JPanel {
         g.setColor(Color.BLACK);
         Artist.drawIntersectionGrid(simulation.intersections);
         g.setStroke(new BasicStroke(WALL_WIDTH));
-        Artist.drawSelectionPreview(first, listener.getCurrentLocation().add(0, -60));
+        Artist.drawSelectionPreview(simulation.getSelection(), listener.getCurrentLocation().add(0, -60));
         Artist.drawEdges(simulation.getEdges());
         repaint();
-    }
-    public void startSimulation(ActionEvent e){
-        start = !start;
     }
     public static void main(String[] args){
         new App();

@@ -53,16 +53,10 @@ public class Simulation {
             previousLength = solutions.size();
         }
     }
-
-    public ArrayList<Ball> getBalls() {
-        return balls;
-    }
-    public ArrayList<Edge> getEdges(){
-        return edges;
-    }
-    public ArrayList<Ball> getSolutions(){
-        return solutions;
-    }
+    public Point getSelection() { return selection; }
+    public ArrayList<Ball> getBalls() { return balls; }
+    public ArrayList<Edge> getEdges(){ return edges; }
+    public ArrayList<Ball> getSolutions(){ return solutions; }
     public void handleClick(Point location, int button){
         if(button == Listener.LEFT_MOUSE_BUTTON){
             updateIntersectionGrid(location);

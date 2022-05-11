@@ -17,7 +17,6 @@ public class Listener implements MouseListener, KeyListener, MouseMotionListener
     public static final int LEFT_MOUSE_BUTTON = 1;
     public static final int RIGHT_MOUSE_BUTTON = 2;
     public boolean leftArrow, rightArrow, downArrow, upArrow;
-    private ArrayList<Point> list;
 
     private Listener(){}
     public static Listener getInstance(){
@@ -26,9 +25,6 @@ public class Listener implements MouseListener, KeyListener, MouseMotionListener
             created = true;
         }
         return instance;
-    }
-    public void setPointList(ArrayList<Point> list){
-        this.list = list;
     }
 
     public boolean isPressed(){
