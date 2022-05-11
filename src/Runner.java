@@ -5,22 +5,17 @@ import java.util.ArrayList;
 
 import simulation.Simulation;
 import util.Point;
-import window.Artist;
-import window.Listener;
+import window.*;
+import window.Window;
 
-import static simulation.Constants.*;
+import static util.Constants.*;
 
 public class Runner extends JPanel {
     private JFrame frame;
-    private JMenuBar menuBar;
-    private JButton saveButton, loadButton, startButton, traceButton;
     private Listener listener;
     private ArrayList<Point> list = new ArrayList<>();
-
     private Point first = Point.NULL_LOCATION;
     private Simulation simulation;
-
-    int previousLength = 0;
     private boolean start = false;
 
     public Runner(){
@@ -28,45 +23,12 @@ public class Runner extends JPanel {
 
         listener = Listener.getInstance();
         listener.setPointList(list);
-        frame = new JFrame();
-        frame.add(this);
+        frame = Window.createFrame(this, listener,
+                this::startSimulation,
+                e -> simulation.saveCurrentMaze(),
+                e -> simulation.loadMaze(),
+                e -> simulation.traceSolutions());
         frame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-
-        frame.setLocation(250, 100);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.addMouseListener(listener);
-        frame.addKeyListener(listener);
-        frame.addMouseMotionListener(listener);
-
-        menuBar = new JMenuBar();
-        menuBar.add(getSpacer());
-
-        startButton = new JButton();
-        startButton.addActionListener(this::startSimulation);
-        startButton.setText("Start");
-
-        saveButton = new JButton();
-        saveButton.addActionListener(e -> simulation.saveCurrentMaze());
-        saveButton.setText("Save");
-
-        loadButton = new JButton();
-        loadButton.addActionListener(e -> simulation.loadMaze());
-        loadButton.setText("Load");
-
-        traceButton = new JButton();
-        traceButton.addActionListener(e -> simulation.traceSolutions());
-        traceButton.setText("Trace");
-
-        menuBar.add(getSpacer());
-        menuBar.add(startButton);
-        menuBar.add(getSpacer());
-        menuBar.add(saveButton);
-        menuBar.add(getSpacer());
-        menuBar.add(loadButton);
-        menuBar.add(getSpacer());
-        menuBar.add(traceButton);
-        menuBar.add(getSpacer());
-        frame.setJMenuBar(menuBar);
         frame.setVisible(true);
     }
 
@@ -94,29 +56,8 @@ public class Runner extends JPanel {
         Artist.drawEdges(simulation.getEdges());
         repaint();
     }
-
-    public static JMenu getSpacer(int x) { //returns empty menu that provides spacing between non empty options on menu
-        JMenu output = new JMenu();
-        output.setEnabled(false);
-        Dimension dim = new Dimension(x, 1);
-        output.setMinimumSize(dim);
-        output.setPreferredSize(dim);
-        output.setMaximumSize(dim);
-        return output;
-    }
-
     public void startSimulation(ActionEvent e){
         start = !start;
-        if(start){
-            startButton.setText("Stop");
-        }
-        else{
-            startButton.setText("Start");
-        }
-    }
-
-    public static JMenu getSpacer() {
-        return getSpacer(20);
     }
     public static void main(String[] args){
         new Runner();

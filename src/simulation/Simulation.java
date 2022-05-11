@@ -6,10 +6,9 @@ import util.Edge;
 import util.Point;
 import window.Listener;
 
-import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 
-import static simulation.Constants.*;
+import static util.Constants.*;
 
 public class Simulation {
     public final Point[][] intersections;
@@ -126,7 +125,7 @@ public class Simulation {
         }
     }
     public void traceSolutions(){
-        
+
     }
 
 }

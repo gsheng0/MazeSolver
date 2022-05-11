@@ -7,7 +7,7 @@ import util.Point;
 import java.awt.*;
 import java.util.ArrayList;
 
-import static simulation.Constants.SMALL_CIRCLE_RADIUS;
+import static util.Constants.SMALL_CIRCLE_RADIUS;
 
 public class Artist {
     public static Graphics2D graphics;
