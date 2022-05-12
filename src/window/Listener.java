@@ -10,7 +10,6 @@ public class Listener implements MouseListener, KeyListener, MouseMotionListener
     static Listener instance;
     static boolean created = false;
     private boolean pressed = false;
-    boolean start = false;
     private Point lastClicked = Point.NULL_LOCATION;
     private Point currentLocation = Point.NULL_LOCATION;
     private int button = -1;

@@ -38,6 +38,7 @@ public class App extends JPanel {
 
         if(!listener.getLastClicked().equals(Point.NULL_LOCATION)){
             simulation.handleClick(listener.getLastClicked(), listener.getButton());
+            listener.clearLastClicked();
         }
 
         g.setColor(Color.BLUE);
