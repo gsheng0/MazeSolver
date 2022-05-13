@@ -59,24 +59,31 @@ public class Simulation {
         }
     }
     public void traceback(){
-        for(Ball solution : solutions){
-            solution.move(edges, WALL_WIDTH);
-            if(solution.getFramesUntilNextCollision() >= 0){
-                continue;
+        if(solutions.size() > 0) {
+            //if there are still solutions in the process of solving the maze
+            for (Ball solution : solutions) {
+                solution.move(edges, WALL_WIDTH);
+                if (solution.getFramesUntilNextCollision() >= 0) {
+                    continue;
+                }
+                if (solution.getLocation().x > WINDOW_WIDTH || solution.getLocation().x < 0 || solution.getLocation().y > WINDOW_HEIGHT || solution.getLocation().y < 0) {
+                    finishedSolutions.add(solution);
+                }
             }
-            if(solution.getLocation().x > WINDOW_WIDTH || solution.getLocation().x < 0 || solution.getLocation().y > WINDOW_HEIGHT || solution.getLocation().y < 0){
-                System.out.println("A ball has solved the maze");
-                finishedSolutions.add(solution);
+            if (previousLength != finishedSolutions.size()) {
+                for (int i = previousLength; i < finishedSolutions.size(); i++) {
+                    solutions.remove(finishedSolutions.get(i));
+                }
+                previousLength = finishedSolutions.size();
             }
         }
-        if(previousLength != finishedSolutions.size()){
-            for(int i = previousLength; i < finishedSolutions.size(); i++){
-                solutions.remove(finishedSolutions.get(i));
-            }
-            previousLength = finishedSolutions.size();
+        else{
+
         }
 
+
     }
+    public int getMode() { return mode; }
     public Point getSelection() { return selection; }
     public ArrayList<Ball> getBalls() { return balls; }
     public ArrayList<Edge> getEdges(){ return edges; }
