@@ -4,6 +4,10 @@ import util.Edge;
 import util.Point;
 import util.Util;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.File;
 import java.util.ArrayList;
 
@@ -111,12 +115,8 @@ public class Maze {
             return false;
         }
     }
-
-    public boolean save(){
-        File file = Util.promptUserForFile();
-        if(file == null){
-            return false;
-        }
+    private void writeMazeToFile(String filename){
+        File file = Util.createFile("src/mazes/" + filename + ".mz");
         String path = file.getAbsolutePath();
 
         ArrayList<String> toBeWritten = new ArrayList<>();
@@ -125,7 +125,64 @@ public class Maze {
         for(Point[] pair : pairsOfIntersections){
             toBeWritten.add(pair[0].toString() + " " + pair[1].toString());
         }
-        return Util.writeToFile(path, toBeWritten);
+        Util.writeToFile(path, toBeWritten);
+    }
+    public void save(){
+        JDialog dialogBox = new JDialog();
+        JTextField textField = new JTextField("");
+        JLabel label = new JLabel("Enter a filename:");
+        Dimension buttonSize = new Dimension(95, 30);
+        Dimension windowSize = new Dimension(100, 20);
+        JButton cancelButton = new JButton("Cancel");
+        JButton okButton = new JButton("Ok");
+
+        textField.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+            }
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(e.getKeyCode() == KeyEvent.VK_ENTER){
+                    String filename = textField.getText();
+                    writeMazeToFile(filename);
+                    dialogBox.dispose();
+                }
+            }
+            @Override
+            public void keyReleased(KeyEvent e) {
+
+            }
+        });
+
+        dialogBox.setLayout(new GridLayout(2, 2));
+        textField.setPreferredSize(windowSize);
+        textField.setSize(windowSize);
+        textField.setMaximumSize(windowSize);
+        textField.setMinimumSize(windowSize);
+        dialogBox.add(label);
+        dialogBox.add(textField);
+
+        okButton.setPreferredSize(buttonSize);
+        okButton.setMinimumSize(buttonSize);
+        okButton.setMaximumSize(buttonSize);
+        okButton.addActionListener(e -> {
+            String filename = textField.getText();
+            writeMazeToFile(filename);
+            dialogBox.dispose();
+        });
+
+        cancelButton.setPreferredSize(buttonSize);
+        cancelButton.setMinimumSize(buttonSize);
+        cancelButton.setMaximumSize(buttonSize);
+        cancelButton.addActionListener(e -> dialogBox.dispose());
+
+        dialogBox.add(cancelButton);
+        dialogBox.add(okButton);
+
+        dialogBox.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        dialogBox.setSize(250,80);
+        dialogBox.setVisible(true);
     }
 
 
