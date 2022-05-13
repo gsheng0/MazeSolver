@@ -4,6 +4,7 @@ import objects.Ball;
 import objects.Maze;
 import util.Edge;
 import util.Point;
+import util.Util.*;
 import window.Listener;
 
 import java.util.ArrayList;
@@ -15,8 +16,12 @@ public class Simulation {
     private ArrayList<Ball> balls;
     private ArrayList<Edge> edges;
     private ArrayList<Ball> solutions;
+    private ArrayList<Ball> finishedSolutions;
     private Point selection = Point.NULL_LOCATION;
     private int previousLength = 0;
+    private int mode = 0;
+    public static int SIMULATION = 0;
+    public static int TRACEBACK = 1;
     public Simulation(){
         edges = new ArrayList<>();
         solutions = new ArrayList<>();
@@ -53,10 +58,30 @@ public class Simulation {
             previousLength = solutions.size();
         }
     }
+    public void traceback(){
+        for(Ball solution : solutions){
+            solution.move(edges, WALL_WIDTH);
+            if(solution.getFramesUntilNextCollision() >= 0){
+                continue;
+            }
+            if(solution.getLocation().x > WINDOW_WIDTH || solution.getLocation().x < 0 || solution.getLocation().y > WINDOW_HEIGHT || solution.getLocation().y < 0){
+                System.out.println("A ball has solved the maze");
+                finishedSolutions.add(solution);
+            }
+        }
+        if(previousLength != finishedSolutions.size()){
+            for(int i = previousLength; i < finishedSolutions.size(); i++){
+                solutions.remove(finishedSolutions.get(i));
+            }
+            previousLength = finishedSolutions.size();
+        }
+
+    }
     public Point getSelection() { return selection; }
     public ArrayList<Ball> getBalls() { return balls; }
     public ArrayList<Edge> getEdges(){ return edges; }
     public ArrayList<Ball> getSolutions(){ return solutions; }
+    public ArrayList<Ball> getFinishedSolutions() { return finishedSolutions; }
     public void handleClick(Point location, int button){
         if(button == Listener.LEFT_MOUSE_BUTTON){
             updateIntersectionGrid(location);
@@ -118,8 +143,18 @@ public class Simulation {
             System.out.println("Failed to load maze");
         }
     }
-    public void traceSolutions(){
+    public void setMode(int mode){
+        if(mode != this.mode){
+            previousLength = 0;
+        }
+        if(mode == SIMULATION){
 
+        }
+        else if(mode == TRACEBACK){
+            for(Ball solution : solutions){
+                solution.setLocation(STARTING_POSITION);
+            }
+        }
     }
 
 }

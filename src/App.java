@@ -23,7 +23,7 @@ public class App extends JPanel {
                 e -> paused = !paused,
                 e -> simulation.saveCurrentMaze(),
                 e -> simulation.loadMaze(),
-                e -> simulation.traceSolutions());
+                e -> simulation.setMode(Simulation.TRACEBACK));
         frame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         frame.setVisible(true);
     }

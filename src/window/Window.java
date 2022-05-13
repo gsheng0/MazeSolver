@@ -2,7 +2,6 @@ package window;
 
 import javax.swing.*;
 
-import java.awt.*;
 import java.awt.event.ActionListener;
 
 import static util.Constants.*;
