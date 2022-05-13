@@ -54,7 +54,10 @@ public class Artist {
             return false;
         }
         ArrayList<Point> travelPoints = ball.getTravelPoints();
-        Point last = travelPoints.get(travelPoints.size() - 1);
+        for(int i = 0; i < travelPoints.size() - 2; i++){
+            graphics.drawLine(travelPoints.get(i).x, travelPoints.get(i).y, travelPoints.get(i + 1).x, travelPoints.get(i + 1).y);
+        }
+        Point last = travelPoints.get(travelPoints.size() - 2);
         graphics.drawLine(last.x, last.y, ball.getLocation().x, ball.getLocation().y);
         return true;
     }
@@ -76,11 +79,13 @@ public class Artist {
             return false;
         }
         for(SolutionBall ball : balls){
+            graphics.fillOval(ball.getLocation().x - Ball.RADIUS, ball.getLocation().y - Ball.RADIUS, Ball.RADIUS * 2, Ball.RADIUS * 2);
+
             ArrayList<Point> travelPoints = ball.getTravelPoints();
-            for(int i = 0; i < travelPoints.size() - 1; i++){
+            for(int i = 0; i < travelPoints.size() - 2; i++){
                 graphics.drawLine(travelPoints.get(i).x, travelPoints.get(i).y, travelPoints.get(i + 1).x, travelPoints.get(i + 1).y);
             }
-            Point last = travelPoints.get(travelPoints.size() - 1);
+            Point last = travelPoints.get(travelPoints.size() - 2);
             graphics.drawLine(last.x, last.y, ball.getLocation().x, ball.getLocation().y);
         }
         return true;
@@ -90,6 +95,8 @@ public class Artist {
             return false;
         }
         for(SolutionBall ball : balls){
+            graphics.fillOval(ball.getLocation().x - Ball.RADIUS, ball.getLocation().y - Ball.RADIUS, Ball.RADIUS * 2, Ball.RADIUS * 2);
+
             ArrayList<Point> travelPoints = ball.getTravelPoints();
             for(int i = 0; i < travelPoints.size() - 1; i++){
                 graphics.drawLine(travelPoints.get(i).x, travelPoints.get(i).y, travelPoints.get(i + 1).x, travelPoints.get(i + 1).y);

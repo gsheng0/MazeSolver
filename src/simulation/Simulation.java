@@ -25,6 +25,7 @@ public class Simulation {
     public Simulation(){
         edges = new ArrayList<>();
         solutions = new ArrayList<>();
+        finishedSolutions = new ArrayList<>();
         intersections = new Point[NUM_HORIZONTAL_INTERSECTIONS + 1][NUM_VERTICAL_INTERSECTIONS + 1];
         for(int x = 0; x <= NUM_HORIZONTAL_INTERSECTIONS; x++){
             for(int y = 0; y <= NUM_VERTICAL_INTERSECTIONS; y++){
@@ -45,7 +46,7 @@ public class Simulation {
                 continue;
             }
             if(ball.getLocation().x > WINDOW_WIDTH || ball.getLocation().x < 0 || ball.getLocation().y > WINDOW_HEIGHT || ball.getLocation().y < 0){
-                System.out.println("A ball has solved the maze");
+                System.out.println("A ball has solved the maze S");
                 solutions.add(new SolutionBall(ball));
             }
         }
@@ -152,13 +153,12 @@ public class Simulation {
         if(mode != this.mode){
             previousLength = 0;
         }
+        this.mode = mode;
         if(mode == SIMULATION){
 
         }
         else if(mode == TRACEBACK){
-            for(Ball solution : solutions){
-                solution.setLocation(STARTING_POSITION);
-            }
+
         }
     }
 
