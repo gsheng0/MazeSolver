@@ -2,9 +2,9 @@ package simulation;
 
 import objects.Ball;
 import objects.Maze;
+import objects.SolutionBall;
 import util.Edge;
 import util.Point;
-import util.Util.*;
 import window.Listener;
 
 import java.util.ArrayList;
@@ -15,8 +15,8 @@ public class Simulation {
     public final Point[][] intersections;
     private ArrayList<Ball> balls;
     private ArrayList<Edge> edges;
-    private ArrayList<Ball> solutions;
-    private ArrayList<Ball> finishedSolutions;
+    private ArrayList<SolutionBall> solutions;
+    private ArrayList<SolutionBall> finishedSolutions;
     private Point selection = Point.NULL_LOCATION;
     private int previousLength = 0;
     private int mode = 0;
@@ -46,7 +46,7 @@ public class Simulation {
             }
             if(ball.getLocation().x > WINDOW_WIDTH || ball.getLocation().x < 0 || ball.getLocation().y > WINDOW_HEIGHT || ball.getLocation().y < 0){
                 System.out.println("A ball has solved the maze");
-                solutions.add(ball);
+                solutions.add(new SolutionBall(ball));
             }
         }
 
@@ -61,12 +61,13 @@ public class Simulation {
     public void traceback(){
         if(solutions.size() > 0) {
             //if there are still solutions in the process of solving the maze
-            for (Ball solution : solutions) {
+            for (SolutionBall solution : solutions) {
                 solution.move(edges, WALL_WIDTH);
                 if (solution.getFramesUntilNextCollision() >= 0) {
                     continue;
                 }
                 if (solution.getLocation().x > WINDOW_WIDTH || solution.getLocation().x < 0 || solution.getLocation().y > WINDOW_HEIGHT || solution.getLocation().y < 0) {
+                    solution.getTravelPoints().add(solution.getLocation());
                     finishedSolutions.add(solution);
                 }
             }
@@ -77,9 +78,6 @@ public class Simulation {
                 previousLength = finishedSolutions.size();
             }
         }
-        else{
-
-        }
 
 
     }
@@ -87,8 +85,8 @@ public class Simulation {
     public Point getSelection() { return selection; }
     public ArrayList<Ball> getBalls() { return balls; }
     public ArrayList<Edge> getEdges(){ return edges; }
-    public ArrayList<Ball> getSolutions(){ return solutions; }
-    public ArrayList<Ball> getFinishedSolutions() { return finishedSolutions; }
+    public ArrayList<SolutionBall> getSolutions(){ return solutions; }
+    public ArrayList<SolutionBall> getFinishedSolutions() { return finishedSolutions; }
     public void handleClick(Point location, int button){
         if(button == Listener.LEFT_MOUSE_BUTTON){
             updateIntersectionGrid(location);

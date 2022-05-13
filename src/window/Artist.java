@@ -1,6 +1,7 @@
 package window;
 
 import objects.Ball;
+import objects.SolutionBall;
 import simulation.Simulation;
 import util.Edge;
 import util.Point;
@@ -45,6 +46,57 @@ public class Artist {
         }
         return true;
     }
+    public static boolean drawSolutionBall(SolutionBall ball){
+        if(graphics == null){
+            return false;
+        }
+        if(!drawFinishedSolutionBall(ball)){
+            return false;
+        }
+        ArrayList<Point> travelPoints = ball.getTravelPoints();
+        Point last = travelPoints.get(travelPoints.size() - 1);
+        graphics.drawLine(last.x, last.y, ball.getLocation().x, ball.getLocation().y);
+        return true;
+    }
+    public static boolean drawFinishedSolutionBall(SolutionBall ball){
+        if(graphics == null){
+            return false;
+        }
+        if(!drawBall(ball)){
+            return false;
+        }
+        ArrayList<Point> travelPoints = ball.getTravelPoints();
+        for(int i = 0; i < travelPoints.size() - 1; i++){
+            graphics.drawLine(travelPoints.get(i).x, travelPoints.get(i).y, travelPoints.get(i + 1).x, travelPoints.get(i + 1).y);
+        }
+        return true;
+    }
+    public static boolean drawSolutionBalls(ArrayList<SolutionBall> balls){
+        if(graphics == null){
+            return false;
+        }
+        for(SolutionBall ball : balls){
+            ArrayList<Point> travelPoints = ball.getTravelPoints();
+            for(int i = 0; i < travelPoints.size() - 1; i++){
+                graphics.drawLine(travelPoints.get(i).x, travelPoints.get(i).y, travelPoints.get(i + 1).x, travelPoints.get(i + 1).y);
+            }
+            Point last = travelPoints.get(travelPoints.size() - 1);
+            graphics.drawLine(last.x, last.y, ball.getLocation().x, ball.getLocation().y);
+        }
+        return true;
+    }
+    public static boolean drawFinishedSolutionBalls(ArrayList<SolutionBall> balls){
+        if(graphics == null){
+            return false;
+        }
+        for(SolutionBall ball : balls){
+            ArrayList<Point> travelPoints = ball.getTravelPoints();
+            for(int i = 0; i < travelPoints.size() - 1; i++){
+                graphics.drawLine(travelPoints.get(i).x, travelPoints.get(i).y, travelPoints.get(i + 1).x, travelPoints.get(i + 1).y);
+            }
+        }
+        return true;
+    }
     public static boolean drawIntersectionGrid(Point[][] intersections){
         if(graphics == null){
             return false;
@@ -73,17 +125,25 @@ public class Artist {
         return true;
     }
     public static boolean drawSimulation(Simulation simulation){
+        if (graphics == null) {
+            return false;
+        }
+        graphics.setStroke(new BasicStroke(WALL_WIDTH));
+        Artist.drawEdges(simulation.getEdges());
+        graphics.setStroke(new BasicStroke(1));
+        graphics.setColor(Color.BLACK);
+        Artist.drawIntersectionGrid(simulation.intersections);
+
         if(simulation.getMode() == Simulation.SIMULATION) {
-            if (graphics == null) {
-                return false;
-            }
             graphics.setColor(Color.BLUE);
             Artist.drawBalls(simulation.getBalls());
+        }
+        else if(simulation.getMode() == Simulation.TRACEBACK){
+            graphics.setColor(Color.BLUE);
+            Artist.drawSolutionBalls(simulation.getSolutions());
+            Artist.drawFinishedSolutionBalls(simulation.getFinishedSolutions());
 
-            graphics.setColor(Color.BLACK);
-            Artist.drawIntersectionGrid(simulation.intersections);
-            graphics.setStroke(new BasicStroke(WALL_WIDTH));
-            Artist.drawEdges(simulation.getEdges());
+
         }
         return true;
 
