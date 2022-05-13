@@ -6,6 +6,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 
 import static util.Constants.*;
+import static util.Util.getSpacer;
 
 public class Window {
     public static JFrame createFrame(JPanel panel, Listener listener, ActionListener startSimulation, ActionListener saveMaze, ActionListener loadMaze, ActionListener traceSolutions){
@@ -57,17 +58,6 @@ public class Window {
         frame.setJMenuBar(menuBar);
         return frame;
     }
-    public static JMenu getSpacer(int x) { //returns empty menu that provides spacing between non empty options on menu
-        JMenu output = new JMenu();
-        output.setEnabled(false);
-        Dimension dim = new Dimension(x, 1);
-        output.setMinimumSize(dim);
-        output.setPreferredSize(dim);
-        output.setMaximumSize(dim);
-        return output;
-    }
-    public static JMenu getSpacer() {
-        return getSpacer(20);
-    }
+
 
 }

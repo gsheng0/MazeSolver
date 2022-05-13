@@ -1,6 +1,7 @@
 package util;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -74,8 +75,19 @@ public class Util {
         }
         return true;
     }
+    public static File createFile(String filename){
+        File file = new File(filename);
+        try{
+            file.createNewFile();
+            return file;
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            return file;
+        }
+    }
     public static File promptUserForFile(){
-        JFileChooser jfc = new JFileChooser("/Users/gsheng/MazeSolver/src/mazes");
+        JFileChooser jfc = new JFileChooser("src/mazes");
         jfc.showDialog(null, "Select");
         jfc.setVisible(true);
         return jfc.getSelectedFile();
@@ -137,6 +149,19 @@ public class Util {
         }
         return builder.toString();
     }
+    public static JMenu getSpacer(int x) { //returns empty menu that provides spacing between non empty options on menu
+        JMenu output = new JMenu();
+        output.setEnabled(false);
+        Dimension dim = new Dimension(x, 1);
+        output.setMinimumSize(dim);
+        output.setPreferredSize(dim);
+        output.setMaximumSize(dim);
+        return output;
+    }
+    public static JMenu getSpacer() {
+        return getSpacer(20);
+    }
+
 
 
 }
