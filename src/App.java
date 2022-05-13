@@ -16,9 +16,11 @@ public class App extends JPanel {
 
 
     public App(){
+        System.setProperty("apple.laf.useScreenMenuBar", "true");
+        System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Some name goes here");
         simulation = new Simulation();
         listener = Listener.getInstance();
-        frame = Window.createFrame(this, listener,
+        frame = Window.createAppleFrame(this, listener,
                 e -> paused = !paused,
                 e -> simulation.saveCurrentMaze(),
                 e -> simulation.loadMaze(),

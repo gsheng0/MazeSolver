@@ -58,5 +58,36 @@ public class Window {
         return frame;
     }
 
+    public static JFrame createAppleFrame(JPanel panel, Listener listener, ActionListener startSimulation, ActionListener saveMaze, ActionListener loadMaze, ActionListener traceSolutions){
+        JFrame frame = new JFrame();
+        frame.add(panel);
+        frame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+        frame.setLocation(WINDOW_LOCATION.x, WINDOW_LOCATION.y);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.addMouseMotionListener(listener);
+        frame.addKeyListener(listener);
+        frame.addMouseMotionListener(listener);
+
+        JMenuBar menuBar = new JMenuBar();
+        JMenu fileMenu = new JMenu("File");
+
+        JMenuItem save = new JMenuItem("Save");
+        save.addActionListener(saveMaze);
+
+        JMenuItem load = new JMenuItem("Load");
+        load.addActionListener(loadMaze);
+
+        JMenuItem trace = new JMenuItem("Trace");
+        trace.addActionListener(traceSolutions);
+
+        fileMenu.add(save);
+        fileMenu.add(load);
+
+        menuBar.add(fileMenu);
+
+        frame.setJMenuBar(menuBar);
+        return frame;
+    }
+
 
 }
