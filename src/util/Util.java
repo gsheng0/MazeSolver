@@ -160,5 +160,14 @@ public class Util {
     public static JMenu getSpacer() {
         return getSpacer(20);
     }
+    public static int getOperatingSystem(){
+        String os = System.getProperty("os.name");
+        if(os.startsWith("Mac")){
+            return Constants.MAC;
+        }
+        else{
+            return Constants.OTHER;
+        }
+    }
 
 }

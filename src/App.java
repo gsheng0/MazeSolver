@@ -20,7 +20,7 @@ public class App extends JPanel {
         System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Some name goes here");
         simulation = new Simulation();
         listener = Listener.getInstance();
-        frame = Window.createAppleFrame(this, listener,
+        frame = Window.createFrame(this, listener,
                 e -> paused = !paused,
                 e -> simulation.saveCurrentMaze(),
                 e -> simulation.loadMaze(),

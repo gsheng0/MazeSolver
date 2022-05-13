@@ -17,4 +17,6 @@ public class Constants {
     public static final double VELOCITY_MAGNITUDE = 0.2;
     public static final int NUMBER_OF_BALLS = 15;
     public static final Point WINDOW_LOCATION = new Point(250, 100);
+    public static final int MAC = 0;
+    public static final int OTHER = 1;
 }

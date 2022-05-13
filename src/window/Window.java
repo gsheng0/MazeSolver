@@ -8,7 +8,7 @@ import static util.Constants.*;
 import static util.Util.getSpacer;
 
 public class Window {
-    public static JFrame createFrame(JPanel panel, Listener listener, ActionListener startSimulation, ActionListener saveMaze, ActionListener loadMaze, ActionListener traceSolutions){
+    public static JFrame createWindowsFrame(JPanel panel, Listener listener, ActionListener startSimulation, ActionListener saveMaze, ActionListener loadMaze, ActionListener traceSolutions) {
         JFrame frame = new JFrame();
         frame.add(panel);
         frame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -24,10 +24,9 @@ public class Window {
         JButton startButton = new JButton();
         startButton.addActionListener(e -> {
             startSimulation.actionPerformed(e);
-            if(startButton.getText().equals("Start")){
+            if (startButton.getText().equals("Start")) {
                 startButton.setText("Stop");
-            }
-            else{
+            } else {
                 startButton.setText("Start");
             }
         });
@@ -58,7 +57,7 @@ public class Window {
         return frame;
     }
 
-    public static JFrame createAppleFrame(JPanel panel, Listener listener, ActionListener startSimulation, ActionListener saveMaze, ActionListener loadMaze, ActionListener traceSolutions){
+    public static JFrame createAppleFrame(JPanel panel, Listener listener, ActionListener startSimulation, ActionListener saveMaze, ActionListener loadMaze, ActionListener traceSolutions) {
         JFrame frame = new JFrame();
         frame.add(panel);
         frame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -89,5 +88,7 @@ public class Window {
         return frame;
     }
 
-
+    public static JFrame createFrame(JPanel panel, Listener listener, ActionListener startSimulation, ActionListener saveMaze, ActionListener loadMaze, ActionListener traceSolutions) {
+        return createWindowsFrame(panel, listener, startSimulation, saveMaze, loadMaze, traceSolutions);
+    }
 }
