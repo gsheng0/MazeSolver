@@ -140,17 +140,13 @@ public class Artist {
         graphics.setStroke(new BasicStroke(1));
         graphics.setColor(Color.BLACK);
         Artist.drawIntersectionGrid(simulation.intersections);
-
+        graphics.setColor(Color.BLUE);
         if(simulation.getMode() == Simulation.SIMULATION) {
-            graphics.setColor(Color.BLUE);
             Artist.drawBalls(simulation.getBalls());
         }
         else if(simulation.getMode() == Simulation.TRACEBACK){
-            graphics.setColor(Color.BLUE);
             Artist.drawSolutionBalls(simulation.getSolutions());
             Artist.drawFinishedSolutionBalls(simulation.getFinishedSolutions());
-
-
         }
         return true;
 

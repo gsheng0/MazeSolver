@@ -41,16 +41,19 @@ public class App extends JPanel {
             else if(simulation.getMode() == Simulation.TRACEBACK){
                 simulation.traceback();
             }
+
         }
         else if(paused) {
             if (!listener.getLastClicked().equals(Point.NULL_LOCATION)) {
                 simulation.handleClick(listener.getLastClicked(), listener.getButton());
                 listener.clearLastClicked();
             }
+            g.setStroke(new BasicStroke(WALL_WIDTH));
             Artist.drawSelectionPreview(simulation.getSelection(), listener.getCurrentLocation().add(0, -60));
         }
-
         Artist.drawSimulation(simulation);
+
+
 
         repaint();
     }

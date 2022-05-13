@@ -134,6 +134,18 @@ public class Ball {
     public void setLocation(Point location){
         this.location = location;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(!(obj instanceof Ball)){
+            return false;
+        }
+        else{
+            Ball other = (Ball)obj;
+            return other.startingVelocity.equals(this.startingVelocity);
+        }
+    }
+
     public static Point generateVelocity(double magnitude){
         double x_comp = (Math.random() * 2.0 * magnitude) - magnitude;
         double y_comp = Math.sqrt(magnitude * magnitude - x_comp * x_comp);

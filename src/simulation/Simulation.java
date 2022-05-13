@@ -46,7 +46,7 @@ public class Simulation {
                 continue;
             }
             if(ball.getLocation().x > WINDOW_WIDTH || ball.getLocation().x < 0 || ball.getLocation().y > WINDOW_HEIGHT || ball.getLocation().y < 0){
-                System.out.println("A ball has solved the maze S");
+                System.out.println("A ball has solved the maze");
                 solutions.add(new SolutionBall(ball));
             }
         }
@@ -130,7 +130,6 @@ public class Simulation {
                     edges.add(new Edge(selection, closest));
                 }
                 selection = Point.NULL_LOCATION;
-
             }
         }
         else{
