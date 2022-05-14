@@ -22,6 +22,7 @@ public class Simulation {
     private int mode = 0;
     public static int SIMULATION = 0;
     public static int TRACEBACK = 1;
+
     public Simulation(){
         edges = new ArrayList<>();
         solutions = new ArrayList<>();
@@ -160,5 +161,23 @@ public class Simulation {
 
         }
     }
+    public void clear(){
+        edges = new ArrayList<>();
+        solutions = new ArrayList<>();
+        finishedSolutions = new ArrayList<>();
+        selection = Point.NULL_LOCATION;
+        previousLength = 0;
+        mode = 0;
+        for(int x = 0; x <= NUM_HORIZONTAL_INTERSECTIONS; x++){
+            for(int y = 0; y <= NUM_VERTICAL_INTERSECTIONS; y++){
+                intersections[x][y] = new Point(MARGIN_SIZE + x * CELL_WIDTH, MARGIN_SIZE + y * CELL_HEIGHT);
+            }
+        }
+        balls = new ArrayList<>();
+        for(int i = 0; i < NUMBER_OF_BALLS; i++){
+            balls.add(new Ball(STARTING_POSITION, Ball.generateVelocity(VELOCITY_MAGNITUDE)));
+        }
+    }
+
 
 }

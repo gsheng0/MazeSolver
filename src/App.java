@@ -13,6 +13,7 @@ public class App extends JPanel {
     public final Listener listener;
     public final Simulation simulation;
     private boolean paused = true;
+    private String currentFile = "";
 
 
     public App(){
@@ -20,11 +21,13 @@ public class App extends JPanel {
         System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Some name goes here");
         simulation = new Simulation();
         listener = Listener.getInstance();
-        frame = Window.createFrame(this, listener,
+        frame = Window.createAppleFrame(this, listener,
                 e -> paused = !paused,
                 e -> simulation.saveCurrentMaze(),
+                e -> simulation.saveCurrentMaze(),
                 e -> simulation.loadMaze(),
-                e -> simulation.setMode(Simulation.TRACEBACK));
+                e -> simulation.setMode(Simulation.TRACEBACK),
+                e -> simulation.clear());
         frame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         frame.setVisible(true);
     }

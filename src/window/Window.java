@@ -8,7 +8,12 @@ import static util.Constants.*;
 import static util.Util.getSpacer;
 
 public class Window {
-    public static JFrame createWindowsFrame(JPanel panel, Listener listener, ActionListener startSimulation, ActionListener saveMaze, ActionListener loadMaze, ActionListener traceSolutions) {
+    public static JFrame createWindowsFrame(
+            JPanel panel, Listener listener,
+            ActionListener startSimulation,
+            ActionListener saveMaze,
+            ActionListener loadMaze,
+            ActionListener traceSolutions) {
         JFrame frame = new JFrame();
         frame.add(panel);
         frame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -57,7 +62,14 @@ public class Window {
         return frame;
     }
 
-    public static JFrame createAppleFrame(JPanel panel, Listener listener, ActionListener startSimulation, ActionListener saveMaze, ActionListener loadMaze, ActionListener traceSolutions) {
+    public static JFrame createAppleFrame(
+            JPanel panel, Listener listener,
+            ActionListener startSimulation,
+            ActionListener saveMaze,
+            ActionListener saveNewMaze,
+            ActionListener loadMaze,
+            ActionListener traceSolutions,
+            ActionListener clearMaze) {
         JFrame frame = new JFrame();
         frame.add(panel);
         frame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -70,6 +82,9 @@ public class Window {
         JMenuBar menuBar = new JMenuBar();
         JMenu fileMenu = new JMenu("File");
 
+        JMenuItem restart = new JMenuItem("New");
+        restart.addActionListener(clearMaze);
+
         JMenuItem save = new JMenuItem("Save");
         save.addActionListener(saveMaze);
 
@@ -79,8 +94,14 @@ public class Window {
         JMenuItem trace = new JMenuItem("Trace");
         trace.addActionListener(traceSolutions);
 
-        fileMenu.add(save);
+        JMenuItem saveNew = new JMenuItem("Save as");
+        save.addActionListener(saveNewMaze);
+
+        fileMenu.add(restart); //should clear maze class's "loadedMaze" variable
+        fileMenu.add(save); //should be grayed out unless maze class as a "most recently loaded maze"
+        fileMenu.add(saveNew);
         fileMenu.add(load);
+
 
         menuBar.add(fileMenu);
 

@@ -15,6 +15,7 @@ public class Maze {
     private ArrayList<Edge> edges;
     private int height, width; //in cells
     private ArrayList<Point[]> pairsOfIntersections = new ArrayList<>();
+    public static String loadedMaze = "";
     public Maze(ArrayList<Edge> edges, int height, int width, int cell_width, int cell_height, int margin_size){
         this.edges = edges;
         this.height = height;
@@ -43,6 +44,7 @@ public class Maze {
             return false;
         }
         String path = file.getAbsolutePath();
+        loadedMaze = path;
         ArrayList<String> data = new ArrayList<>();
         if(!Util.readFromFile(path, data)){
             return false;
@@ -90,6 +92,7 @@ public class Maze {
             return false;
         }
         String path = file.getAbsolutePath();
+        loadedMaze = path;
         ArrayList<String> data = new ArrayList<>();
         if(!Util.readFromFile(path, data)){
             return false;
